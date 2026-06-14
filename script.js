@@ -131,7 +131,7 @@ const state = {
 };
 
 const app = document.getElementById("app");
-const xpPerCorrect = 15;
+const xpPerCorrect = 10;
 
 function render() {
   if (state.screen === "home") renderHome();
@@ -359,7 +359,7 @@ function nextQuestion() {
 
 function finishMission() {
   const score = getScore();
-  state.readiness = Math.max(state.readiness, Math.round((score / questions.length) * 8));
+  state.readiness = Math.max(state.readiness, Math.round((score / questions.length) * 2));
   state.screen = "complete";
   render();
 }
@@ -371,7 +371,7 @@ function renderComplete() {
 
   app.innerHTML = `
     <section class="panel complete-card">
-      <p class="eyebrow">Toronto Stamp Earned</p>
+      <p class="eyebrow">Coffee Shop Stamp Earned</p>
       <h2>Mission Complete</h2>
       <p>You practiced a real Canadian coffee shop situation with TEF-style practical French.</p>
 
@@ -401,8 +401,10 @@ function renderComplete() {
         </div>
       </div>
 
+      <p class="next-step">Next: Complete more missions to build your TEF profile.</p>
+
       <div class="actions">
-        <button class="secondary-btn" id="backToJourney">Back to Journey</button>
+        <button class="secondary-btn" id="backToJourney">Back to Canada Journey</button>
       </div>
     </section>
   `;
