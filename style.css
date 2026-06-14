@@ -476,6 +476,12 @@ h1 {
   line-height: 1;
 }
 
+.next-step {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-weight: 750;
+}
+
 @media (max-width: 760px) {
   .app-shell {
     padding: 12px;
@@ -527,4 +533,4 @@ h1 {
   .secondary-btn {
     width: 100%;
   }
-}
+}+
