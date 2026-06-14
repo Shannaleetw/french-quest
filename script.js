@@ -146,11 +146,12 @@ function getScore() {
 
 function getSkillProfile() {
   const score = getScore();
+  const answered = state.answers.length;
   return {
-    Vocabulary: score,
-    Reading: state.answers.length,
-    Situations: score,
-    Expressions: score
+    "Vocabulary XP": score * xpPerCorrect,
+    "Reading XP": answered * xpPerCorrect,
+    "Situation XP": score * xpPerCorrect,
+    "Expression XP": score * xpPerCorrect
   };
 }
 
@@ -297,6 +298,8 @@ function renderFeedback() {
   const question = questions[state.currentQuestion];
   const isCorrect = state.answers[state.answers.length - 1];
   const correctAnswer = question.options[question.answer];
+  const selectedAnswer = question.options[state.selectedAnswer];
+  const earnedXp = isCorrect ? xpPerCorrect : 0;
 
   app.innerHTML = `
     <section class="panel mission-card">
@@ -304,12 +307,16 @@ function renderFeedback() {
         <div>
           <p class="eyebrow">Mission 1: Coffee Shop</p>
           <h2>${isCorrect ? "Correct" : "Incorrect"}</h2>
+          <div class="review-line">
+            <p><strong>Question:</strong> ${question.question}</p>
+            <p><strong>Your answer:</strong> ${selectedAnswer}</p>
+          </div>
         </div>
         <span class="pill">XP ${state.xp}</span>
       </div>
 
       <div class="feedback-result ${isCorrect ? "correct" : "incorrect"}">
-        ${isCorrect ? "Correct" : "Incorrect"}
+        +${earnedXp} XP
       </div>
 
       ${isCorrect ? "" : `<p><strong>Correct answer:</strong> ${correctAnswer}</p>`}
