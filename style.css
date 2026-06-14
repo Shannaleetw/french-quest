@@ -336,6 +336,24 @@ h1 {
   line-height: 1.05;
 }
 
+.review-line {
+  display: grid;
+  gap: 4px;
+  max-width: 620px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.review-line p {
+  margin-bottom: 0;
+}
+
+.review-line strong {
+  color: var(--ink);
+}
+
 .question-meta {
   display: flex;
   flex-wrap: wrap;
@@ -533,4 +551,4 @@ h1 {
   .secondary-btn {
     width: 100%;
   }
-}+
+}
