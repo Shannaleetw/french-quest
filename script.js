@@ -1,128 +1,7 @@
-const questions = [
-  {
-    question: "Choose the French word for: coffee",
-    options: ["thé", "café", "lait", "sucre"],
-    answer: 1,
-    vocabulary: "café = coffee",
-    pattern: "Je prends un café.",
-    tip: "點餐最常見單字之一。"
-  },
-  {
-    question: "Choose the French word for: tea",
-    options: ["eau", "lait", "thé", "jus"],
-    answer: 2,
-    vocabulary: "thé = tea",
-    pattern: "Je voudrais un thé.",
-    tip: "飲品類核心字彙。"
-  },
-  {
-    question: "Choose the French word for: milk",
-    options: ["sucre", "beurre", "lait", "pain"],
-    answer: 2,
-    vocabulary: "lait = milk",
-    pattern: "Avec du lait.",
-    tip: "常見於咖啡與茶類訂製。"
-  },
-  {
-    question: "Choose the French word for: sugar",
-    options: ["sucre", "sel", "café", "tasse"],
-    answer: 0,
-    vocabulary: "sucre = sugar",
-    pattern: "Avec du sucre.",
-    tip: "咖啡店高頻字彙。"
-  },
-  {
-    question: "Choose the French word for: cup",
-    options: ["bouteille", "tasse", "table", "assiette"],
-    answer: 1,
-    vocabulary: "tasse = cup",
-    pattern: "Une tasse de café.",
-    tip: "餐飲情境常見名詞。"
-  },
-  {
-    question: "Choose the French word for: menu",
-    options: ["facture", "reçu", "menu", "porte"],
-    answer: 2,
-    vocabulary: "menu = menu",
-    pattern: "Puis-je voir le menu ?",
-    tip: "加拿大餐廳高頻字彙。"
-  },
-  {
-    question: "Choose the French word for: receipt",
-    options: ["reçu", "menu", "addition", "table"],
-    answer: 0,
-    vocabulary: "reçu = receipt",
-    pattern: "Puis-je avoir un reçu ?",
-    tip: "加拿大生活常需要索取收據。"
-  },
-  {
-    question: "Choose the French word for: bill",
-    options: ["menu", "reçu", "addition", "caisse"],
-    answer: 2,
-    vocabulary: "addition = bill",
-    pattern: "L'addition, s'il vous plaît.",
-    tip: "法語區結帳必備表達。"
-  },
-  {
-    question: "What does this coffee shop phrase mean? Bonjour !",
-    options: ["Goodbye", "Thank you", "Hello", "Please"],
-    answer: 2,
-    vocabulary: "bonjour = hello",
-    pattern: "Bonjour !",
-    tip: "加拿大法語區進店最常見的問候語。"
-  },
-  {
-    question: "What does this coffee shop question mean? À emporter ou sur place ?",
-    options: ["Payment method", "Takeout or dine-in", "Drink size", "Receipt needed"],
-    answer: 1,
-    vocabulary: "à emporter = takeout; sur place = dine-in",
-    pattern: "À emporter ou sur place ?",
-    tip: "加拿大咖啡店與餐廳最常見的問題之一。"
-  },
-  {
-    question: "What does this checkout phrase mean? Ça fait 5,95 $.",
-    options: ["The store is closing.", "Your order is ready.", "The total is $5.95.", "There is a discount."],
-    answer: 2,
-    vocabulary: "ça fait = the total is",
-    pattern: "Ça fait + montant.",
-    tip: "加拿大法語區結帳時的高頻表達。"
-  },
-  {
-    question: "What does this coffee shop question mean? Voulez-vous un reçu ?",
-    options: ["Would you like a receipt?", "Would you like sugar?", "Would you like a coffee?", "Would you like milk?"],
-    answer: 0,
-    vocabulary: "reçu = receipt",
-    pattern: "Voulez-vous + nom ?",
-    tip: "加拿大消費情境中經常出現。"
-  },
-  {
-    question: "What does this coffee shop question mean? Avec du lait ?",
-    options: ["Would you like milk?", "Would you like tea?", "Would you like a receipt?", "Would you like a table?"],
-    answer: 0,
-    vocabulary: "lait = milk",
-    pattern: "Avec + nom ?",
-    tip: "點咖啡時常見的簡短確認問句。"
-  },
-  {
-    question: "What does this coffee shop phrase mean? Votre commande est prête.",
-    options: ["Your table is ready.", "Your order is ready.", "Your coffee is cold.", "Your receipt is ready."],
-    answer: 1,
-    vocabulary: "commande = order; prête = ready",
-    pattern: "Votre commande est prête.",
-    tip: "加拿大連鎖咖啡店與餐廳高頻句型。"
-  },
-  {
-    question: "What does this coffee shop phrase mean? Merci, bonne journée !",
-    options: ["Thank you, have a nice day.", "Please wait here.", "Your order is ready.", "Would you like a receipt?"],
-    answer: 0,
-    vocabulary: "bonne journée = have a nice day",
-    pattern: "Merci, bonne journée !",
-    tip: "加拿大法語區離開商店時常見的結尾語。"
-  }
-];
+let questions = [];
 
 const state = {
-  screen: "home",
+  screen: "loading",
   currentQuestion: 0,
   selectedAnswer: null,
   answers: [],
@@ -133,11 +12,52 @@ const state = {
 const app = document.getElementById("app");
 const xpPerCorrect = 10;
 
+async function loadMissionData() {
+  try {
+    const response = await fetch("data/coffee_shop.json");
+    if (!response.ok) throw new Error("Mission data request failed.");
+
+    const data = await response.json();
+    if (!Array.isArray(data) || data.length === 0) {
+      throw new Error("Mission data is empty.");
+    }
+
+    questions = data;
+    state.screen = "home";
+    render();
+  } catch (error) {
+    state.screen = "error";
+    render();
+  }
+}
+
 function render() {
+  if (state.screen === "loading") renderLoading();
+  if (state.screen === "error") renderError();
   if (state.screen === "home") renderHome();
   if (state.screen === "question") renderQuestion();
   if (state.screen === "feedback") renderFeedback();
   if (state.screen === "complete") renderComplete();
+}
+
+function renderLoading() {
+  app.innerHTML = `
+    <section class="panel mission-card">
+      <p class="eyebrow">Loading Mission</p>
+      <h2>Coffee Shop</h2>
+      <p>Preparing your TEF Canada practice mission.</p>
+    </section>
+  `;
+}
+
+function renderError() {
+  app.innerHTML = `
+    <section class="panel mission-card">
+      <p class="eyebrow">Mission Data</p>
+      <h2>Unable to load</h2>
+      <p>Unable to load mission data. Please try again.</p>
+    </section>
+  `;
 }
 
 function getScore() {
@@ -423,3 +343,4 @@ function renderComplete() {
 }
 
 render();
+loadMissionData();
