@@ -82,6 +82,19 @@ function getSkillProfile() {
   };
 }
 
+function getCorrectIndex(question) {
+  if (typeof question.answer === "number") return question.answer;
+
+  const answerMap = {
+    A: 0,
+    B: 1,
+    C: 2,
+    D: 3
+  };
+
+  return answerMap[String(question.answer).trim().toUpperCase()];
+}
+
 function renderHome() {
   const skills = getSkillProfile();
 
@@ -217,7 +230,8 @@ function renderQuestion() {
 
 function submitAnswer() {
   const question = questions[state.currentQuestion];
-  const isCorrect = state.selectedAnswer === question.answer;
+  const correctIndex = getCorrectIndex(question);
+  const isCorrect = state.selectedAnswer === correctIndex;
 
   state.answers.push(isCorrect);
   if (isCorrect) state.xp += xpPerCorrect;
@@ -228,7 +242,8 @@ function submitAnswer() {
 function renderFeedback() {
   const question = questions[state.currentQuestion];
   const isCorrect = state.answers[state.answers.length - 1];
-  const correctAnswer = question.options[question.answer];
+  const correctIndex = getCorrectIndex(question);
+  const correctAnswer = question.options[correctIndex];
   const selectedAnswer = question.options[state.selectedAnswer];
   const earnedXp = isCorrect ? xpPerCorrect : 0;
 
@@ -254,7 +269,7 @@ function renderFeedback() {
 
       <div class="options" aria-label="Answered options">
         ${question.options.map((option, index) => {
-          const className = index === question.answer ? "correct" : index === state.selectedAnswer ? "wrong" : "";
+          const className = index === correctIndex ? "correct" : index === state.selectedAnswer ? "wrong" : "";
           return `<button class="option ${className}" type="button" disabled>${option}</button>`;
         }).join("")}
       </div>
@@ -270,7 +285,7 @@ function renderFeedback() {
         </div>
         <div class="note">
           <span>TEF Tip</span>
-          ${question.tip}
+          ${question.tef_tip || ""}
         </div>
       </div>
 
