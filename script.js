@@ -6,7 +6,9 @@ const state = {
   selectedAnswer: null,
   answers: [],
   xp: 0,
-  readiness: 0
+  readiness: 0,
+  missionLoaded: false,
+  errorMessage: ""
 };
 
 const app = document.getElementById("app");
@@ -14,7 +16,7 @@ const xpPerCorrect = 10;
 
 async function loadMissionData() {
   try {
-    const response = await fetch("data/coffee_shop.json");
+    const response = await fetch("./data/coffee_shop.json");
     if (!response.ok) throw new Error("Mission data request failed.");
 
     const data = await response.json();
@@ -23,9 +25,13 @@ async function loadMissionData() {
     }
 
     questions = data;
+    state.missionLoaded = true;
     state.screen = "home";
     render();
   } catch (error) {
+    console.error(error);
+    state.missionLoaded = false;
+    state.errorMessage = error instanceof Error ? error.message : String(error);
     state.screen = "error";
     render();
   }
@@ -56,6 +62,7 @@ function renderError() {
       <p class="eyebrow">Mission Data</p>
       <h2>Unable to load</h2>
       <p>Unable to load mission data. Please try again.</p>
+      <p>Debug: ${state.errorMessage}</p>
     </section>
   `;
 }
@@ -137,16 +144,20 @@ function renderHome() {
         </div>
 
         <div class="actions">
-          <button class="primary-btn" id="startMission">Start Coffee Shop Mission</button>
+          <button class="primary-btn" id="startMission" ${state.missionLoaded ? "" : "disabled"}>Start Coffee Shop Mission</button>
         </div>
       </div>
     </section>
   `;
 
-  document.getElementById("startMission").addEventListener("click", startMission);
+  if (state.missionLoaded) {
+    document.getElementById("startMission").addEventListener("click", startMission);
+  }
 }
 
 function startMission() {
+  if (!state.missionLoaded || questions.length === 0) return;
+
   state.screen = "question";
   state.currentQuestion = 0;
   state.selectedAnswer = null;
