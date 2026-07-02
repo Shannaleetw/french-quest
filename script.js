@@ -30,6 +30,8 @@ const state = {
   readiness: 0,
   missionLoaded: false,
   errorMessage: "",
+  questionStartTime: null,
+  missionStartTime: null,
   progress: loadProgress()
 };
 
@@ -140,6 +142,10 @@ function getGuessedAnswers() {
   return state.answers.filter((answer) => answer.guessed);
 }
 
+function getTotalAnswerTimeMs() {
+  return state.answers.reduce((total, answer) => total + (answer.timeSpentMs || 0), 0);
+}
+
 function getSkillProfile() {
   const skillXp = state.progress.skillXp || defaultProgress.skillXp;
   return {
@@ -151,6 +157,7 @@ function getSkillProfile() {
 }
 
 function getCorrectIndex(question) {
+  if (typeof question.correctIndexOverride === "number") return question.correctIndexOverride;
   if (typeof question.answer === "number") return question.answer;
 
   const answerMap = {
@@ -167,6 +174,30 @@ function shuffleArray(items) {
   return [...items].sort(() => Math.random() - 0.5);
 }
 
+function prepareQuestionForSession(question, randomizeOptions = false) {
+  if (!randomizeOptions) {
+    return {
+      ...question,
+      options: [...question.options],
+      correctIndexOverride: getCorrectIndex(question)
+    };
+  }
+
+  const correctOption = question.options[getCorrectIndex(question)];
+  const shuffledOptions = shuffleArray(question.options);
+
+  return {
+    ...question,
+    options: shuffledOptions,
+    correctIndexOverride: shuffledOptions.indexOf(correctOption)
+  };
+}
+
+function prepareQuestionsForSession(sourceQuestions, { randomizeQuestions = false, randomizeOptions = false } = {}) {
+  const prepared = sourceQuestions.map((question) => prepareQuestionForSession(question, randomizeOptions));
+  return randomizeQuestions ? shuffleArray(prepared) : prepared;
+}
+
 function formatDateTime(value) {
   if (!value) return "";
   return new Date(value).toLocaleString([], {
@@ -177,13 +208,22 @@ function formatDateTime(value) {
   });
 }
 
+function formatDuration(milliseconds) {
+  const totalSeconds = Math.max(0, Math.round((milliseconds || 0) / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  if (minutes === 0) return `${seconds}s`;
+  return `${minutes}m ${seconds}s`;
+}
+
 function getReviewQuestions() {
   const ids = uniqueIds([
     ...state.progress.wrongQuestionIds,
     ...state.progress.guessedQuestionIds
   ]);
 
-  return shuffleArray(questions.filter((question) => ids.includes(question.id)));
+  return questions.filter((question) => ids.includes(question.id));
 }
 
 function renderHome() {
@@ -217,7 +257,7 @@ function renderHome() {
           <div class="stat-card">
             <span class="stat-label">Last Attempt</span>
             <strong>${lastAttempt.score} / ${lastAttempt.total}</strong>
-            <p class="next-step">${formatDateTime(lastAttempt.completedAt)} · Wrong: ${lastAttempt.wrongCount} · Guessed: ${lastAttempt.guessedCount}</p>
+            <p class="next-step">${formatDateTime(lastAttempt.completedAt)} · Wrong: ${lastAttempt.wrongCount} · Guessed: ${lastAttempt.guessedCount} · Time: ${formatDuration(lastAttempt.totalTimeMs)}</p>
           </div>
         ` : `
           <p class="next-step">Start your first mission to build your TEF profile.</p>
@@ -261,7 +301,7 @@ function renderHome() {
 
         <div class="actions">
           <button class="primary-btn" id="startMission" ${state.missionLoaded ? "" : "disabled"}>Start Coffee Shop Mission</button>
-          ${hasCompletedCoffeeShop ? `<button class="secondary-btn" id="retakeMission">Retake Random</button>` : ""}
+          ${hasCompletedCoffeeShop ? `<button class="secondary-btn" id="retakeMission">Retake</button>` : ""}
           ${reviewCount ? `<button class="secondary-btn" id="reviewMission">Review ${reviewCount} Weak Spots</button>` : ""}
         </div>
       </div>
@@ -269,17 +309,17 @@ function renderHome() {
   `;
 
   if (state.missionLoaded) {
-    document.getElementById("startMission").addEventListener("click", () => startMission({ randomize: false, reviewMode: false }));
+    document.getElementById("startMission").addEventListener("click", () => startMission({ randomizeQuestions: false, randomizeOptions: false, reviewMode: false }));
 
     const retakeButton = document.getElementById("retakeMission");
-    if (retakeButton) retakeButton.addEventListener("click", () => startMission({ randomize: true, reviewMode: false }));
+    if (retakeButton) retakeButton.addEventListener("click", () => startMission({ randomizeQuestions: true, randomizeOptions: true, reviewMode: false }));
 
     const reviewButton = document.getElementById("reviewMission");
     if (reviewButton) reviewButton.addEventListener("click", startReviewMode);
   }
 }
 
-function startMission({ randomize = false, reviewMode = false } = {}) {
+function startMission({ randomizeQuestions = false, randomizeOptions = false, reviewMode = false } = {}) {
   if (!state.missionLoaded || questions.length === 0) return;
 
   state.screen = "question";
@@ -289,7 +329,9 @@ function startMission({ randomize = false, reviewMode = false } = {}) {
   state.answers = [];
   state.xp = 0;
   state.reviewMode = reviewMode;
-  state.activeQuestions = randomize ? shuffleArray(questions) : [...questions];
+  state.activeQuestions = prepareQuestionsForSession(questions, { randomizeQuestions, randomizeOptions });
+  state.missionStartTime = Date.now();
+  state.questionStartTime = Date.now();
   render();
 }
 
@@ -304,7 +346,9 @@ function startReviewMode() {
   state.answers = [];
   state.xp = 0;
   state.reviewMode = true;
-  state.activeQuestions = reviewQuestions;
+  state.activeQuestions = prepareQuestionsForSession(reviewQuestions, { randomizeQuestions: true, randomizeOptions: true });
+  state.missionStartTime = Date.now();
+  state.questionStartTime = Date.now();
   render();
 }
 
@@ -369,6 +413,7 @@ function submitAnswer() {
   const question = activeQuestions[state.currentQuestion];
   const correctIndex = getCorrectIndex(question);
   const isCorrect = state.selectedAnswer === correctIndex;
+  const timeSpentMs = Date.now() - (state.questionStartTime || Date.now());
 
   state.answers.push({
     questionId: question.id,
@@ -376,7 +421,8 @@ function submitAnswer() {
     isCorrect,
     guessed: state.guessedCurrent,
     selectedIndex: state.selectedAnswer,
-    correctIndex
+    correctIndex,
+    timeSpentMs
   });
 
   if (isCorrect) state.xp += xpPerCorrect;
@@ -402,6 +448,7 @@ function renderFeedback() {
           <div class="review-line">
             <p><strong>Question:</strong> ${question.question}</p>
             <p><strong>Your answer:</strong> ${selectedAnswer}</p>
+            <p><strong>Time spent:</strong> ${formatDuration(answer.timeSpentMs)}</p>
             ${answer.guessed ? `<p><strong>Marked:</strong> Guessed / Not sure</p>` : ""}
           </div>
         </div>
@@ -456,6 +503,7 @@ function nextQuestion() {
   state.currentQuestion += 1;
   state.selectedAnswer = null;
   state.guessedCurrent = false;
+  state.questionStartTime = Date.now();
   state.screen = "question";
   render();
 }
@@ -465,6 +513,8 @@ function finishMission() {
   const score = getScore();
   const wrongAnswers = getWrongAnswers();
   const guessedAnswers = getGuessedAnswers();
+  const totalTimeMs = getTotalAnswerTimeMs();
+  const averageTimeMs = activeQuestions.length ? totalTimeMs / activeQuestions.length : 0;
   const readinessGain = Math.round((score / activeQuestions.length) * 2);
 
   state.progress.totalXp += state.xp;
@@ -500,6 +550,8 @@ function finishMission() {
     xp: state.xp,
     wrongCount: wrongAnswers.length,
     guessedCount: guessedAnswers.length,
+    totalTimeMs,
+    averageTimeMs,
     completedAt: new Date().toISOString()
   };
 
@@ -514,6 +566,8 @@ function renderComplete() {
   const scorePercent = Math.round((score / activeQuestions.length) * 100);
   const wrongCount = getWrongAnswers().length;
   const guessedCount = getGuessedAnswers().length;
+  const totalTimeMs = getTotalAnswerTimeMs();
+  const averageTimeMs = activeQuestions.length ? totalTimeMs / activeQuestions.length : 0;
   const situationPercent = Math.round(((state.answers.length + score) / (activeQuestions.length * 2)) * 100);
 
   app.innerHTML = `
@@ -543,6 +597,14 @@ function renderComplete() {
           <span class="stat-label">Guessed Questions</span>
           <strong>${guessedCount}</strong>
         </div>
+        <div class="stat-card">
+          <span class="stat-label">Total Time</span>
+          <strong>${formatDuration(totalTimeMs)}</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Average Time</span>
+          <strong>${formatDuration(averageTimeMs)}</strong>
+        </div>
       </div>
 
       <div class="report-grid">
@@ -568,6 +630,8 @@ function renderComplete() {
     state.screen = "home";
     state.activeQuestions = [];
     state.reviewMode = false;
+    state.questionStartTime = null;
+    state.missionStartTime = null;
     render();
   });
 }
