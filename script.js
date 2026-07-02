@@ -1,18 +1,74 @@
 let questions = [];
 
+const storageKey = "frenchQuestProgressV03";
+const xpPerCorrect = 10;
+
+const defaultProgress = {
+  totalXp: 0,
+  readiness: 0,
+  lastAttempt: null,
+  completedMissions: [],
+  wrongQuestionIds: [],
+  guessedQuestionIds: [],
+  skillXp: {
+    vocabulary: 0,
+    reading: 0,
+    situation: 0,
+    expression: 0
+  }
+};
+
 const state = {
   screen: "loading",
   currentQuestion: 0,
   selectedAnswer: null,
+  guessedCurrent: false,
   answers: [],
+  activeQuestions: [],
+  reviewMode: false,
   xp: 0,
   readiness: 0,
   missionLoaded: false,
-  errorMessage: ""
+  errorMessage: "",
+  progress: loadProgress()
 };
 
 const app = document.getElementById("app");
-const xpPerCorrect = 10;
+
+function getFreshDefaultProgress() {
+  return JSON.parse(JSON.stringify(defaultProgress));
+}
+
+function loadProgress() {
+  try {
+    const saved = localStorage.getItem(storageKey);
+    if (!saved) return getFreshDefaultProgress();
+
+    const parsed = JSON.parse(saved);
+    return {
+      ...getFreshDefaultProgress(),
+      ...parsed,
+      skillXp: {
+        ...defaultProgress.skillXp,
+        ...(parsed.skillXp || {})
+      },
+      wrongQuestionIds: parsed.wrongQuestionIds || [],
+      guessedQuestionIds: parsed.guessedQuestionIds || [],
+      completedMissions: parsed.completedMissions || []
+    };
+  } catch (error) {
+    console.error("Progress loading failed:", error);
+    return getFreshDefaultProgress();
+  }
+}
+
+function saveProgress() {
+  localStorage.setItem(storageKey, JSON.stringify(state.progress));
+}
+
+function uniqueIds(ids) {
+  return [...new Set(ids.filter(Boolean))];
+}
 
 async function loadMissionData() {
   try {
@@ -26,10 +82,11 @@ async function loadMissionData() {
 
     questions = data;
     state.missionLoaded = true;
+    state.readiness = state.progress.readiness || 0;
     state.screen = "home";
     render();
   } catch (error) {
-    console.error(error);
+    console.error("Mission loading failed:", error);
     state.missionLoaded = false;
     state.errorMessage = error instanceof Error ? error.message : String(error);
     state.screen = "error";
@@ -67,18 +124,29 @@ function renderError() {
   `;
 }
 
+function getActiveQuestions() {
+  return state.activeQuestions.length ? state.activeQuestions : questions;
+}
+
 function getScore() {
-  return state.answers.filter(Boolean).length;
+  return state.answers.filter((answer) => answer.isCorrect).length;
+}
+
+function getWrongAnswers() {
+  return state.answers.filter((answer) => !answer.isCorrect);
+}
+
+function getGuessedAnswers() {
+  return state.answers.filter((answer) => answer.guessed);
 }
 
 function getSkillProfile() {
-  const score = getScore();
-  const answered = state.answers.length;
+  const skillXp = state.progress.skillXp || defaultProgress.skillXp;
   return {
-    "Vocabulary XP": score * xpPerCorrect,
-    "Reading XP": answered * xpPerCorrect,
-    "Situation XP": score * xpPerCorrect,
-    "Expression XP": score * xpPerCorrect
+    "Vocabulary XP": skillXp.vocabulary || 0,
+    "Reading XP": skillXp.reading || 0,
+    "Situation XP": skillXp.situation || 0,
+    "Expression XP": skillXp.expression || 0
   };
 }
 
@@ -95,8 +163,34 @@ function getCorrectIndex(question) {
   return answerMap[String(question.answer).trim().toUpperCase()];
 }
 
+function shuffleArray(items) {
+  return [...items].sort(() => Math.random() - 0.5);
+}
+
+function formatDateTime(value) {
+  if (!value) return "";
+  return new Date(value).toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+function getReviewQuestions() {
+  const ids = uniqueIds([
+    ...state.progress.wrongQuestionIds,
+    ...state.progress.guessedQuestionIds
+  ]);
+
+  return shuffleArray(questions.filter((question) => ids.includes(question.id)));
+}
+
 function renderHome() {
   const skills = getSkillProfile();
+  const lastAttempt = state.progress.lastAttempt;
+  const reviewCount = getReviewQuestions().length;
+  const hasCompletedCoffeeShop = state.progress.completedMissions.includes("coffee_shop");
 
   app.innerHTML = `
     <section class="screen home-grid">
@@ -106,10 +200,10 @@ function renderHome() {
             <p class="eyebrow">Passport Progress</p>
             <h2>TEF Readiness</h2>
           </div>
-          <div class="readiness-number">${state.readiness}%</div>
+          <div class="readiness-number">${state.progress.readiness}%</div>
         </div>
-        <div class="meter" aria-label="TEF Readiness ${state.readiness}%">
-          <div class="meter-fill" style="--value: ${state.readiness}%"></div>
+        <div class="meter" aria-label="TEF Readiness ${state.progress.readiness}%">
+          <div class="meter-fill" style="--value: ${state.progress.readiness}%"></div>
         </div>
         <div class="skill-grid">
           ${Object.entries(skills).map(([label, value]) => `
@@ -119,6 +213,15 @@ function renderHome() {
             </div>
           `).join("")}
         </div>
+        ${lastAttempt ? `
+          <div class="stat-card">
+            <span class="stat-label">Last Attempt</span>
+            <strong>${lastAttempt.score} / ${lastAttempt.total}</strong>
+            <p class="next-step">${formatDateTime(lastAttempt.completedAt)} · Wrong: ${lastAttempt.wrongCount} · Guessed: ${lastAttempt.guessedCount}</p>
+          </div>
+        ` : `
+          <p class="next-step">Start your first mission to build your TEF profile.</p>
+        `}
       </div>
 
       <div class="panel journey">
@@ -140,7 +243,7 @@ function renderHome() {
           <div class="route-stop ready">
             <div class="route-icon" aria-hidden="true">CUP</div>
             <p class="route-name">Coffee Shop Mission</p>
-            <span class="route-state">Ready</span>
+            <span class="route-state">${hasCompletedCoffeeShop ? "Completed" : "Ready"}</span>
           </div>
           <div class="route-arrow" aria-hidden="true">|</div>
           <div class="route-stop">
@@ -158,44 +261,71 @@ function renderHome() {
 
         <div class="actions">
           <button class="primary-btn" id="startMission" ${state.missionLoaded ? "" : "disabled"}>Start Coffee Shop Mission</button>
+          ${hasCompletedCoffeeShop ? `<button class="secondary-btn" id="retakeMission">Retake Random</button>` : ""}
+          ${reviewCount ? `<button class="secondary-btn" id="reviewMission">Review ${reviewCount} Weak Spots</button>` : ""}
         </div>
       </div>
     </section>
   `;
 
   if (state.missionLoaded) {
-    document.getElementById("startMission").addEventListener("click", startMission);
+    document.getElementById("startMission").addEventListener("click", () => startMission({ randomize: false, reviewMode: false }));
+
+    const retakeButton = document.getElementById("retakeMission");
+    if (retakeButton) retakeButton.addEventListener("click", () => startMission({ randomize: true, reviewMode: false }));
+
+    const reviewButton = document.getElementById("reviewMission");
+    if (reviewButton) reviewButton.addEventListener("click", startReviewMode);
   }
 }
 
-function startMission() {
+function startMission({ randomize = false, reviewMode = false } = {}) {
   if (!state.missionLoaded || questions.length === 0) return;
 
   state.screen = "question";
   state.currentQuestion = 0;
   state.selectedAnswer = null;
+  state.guessedCurrent = false;
   state.answers = [];
   state.xp = 0;
+  state.reviewMode = reviewMode;
+  state.activeQuestions = randomize ? shuffleArray(questions) : [...questions];
+  render();
+}
+
+function startReviewMode() {
+  const reviewQuestions = getReviewQuestions();
+  if (!reviewQuestions.length) return;
+
+  state.screen = "question";
+  state.currentQuestion = 0;
+  state.selectedAnswer = null;
+  state.guessedCurrent = false;
+  state.answers = [];
+  state.xp = 0;
+  state.reviewMode = true;
+  state.activeQuestions = reviewQuestions;
   render();
 }
 
 function renderQuestion() {
-  const question = questions[state.currentQuestion];
-  const progress = (state.currentQuestion / questions.length) * 100;
+  const activeQuestions = getActiveQuestions();
+  const question = activeQuestions[state.currentQuestion];
+  const progress = (state.currentQuestion / activeQuestions.length) * 100;
 
   app.innerHTML = `
     <section class="panel mission-card">
       <div class="mission-head">
         <div>
-          <p class="eyebrow">Mission 1</p>
+          <p class="eyebrow">${state.reviewMode ? "Review Mode" : "Mission 1"}</p>
           <h2>Coffee Shop</h2>
         </div>
         <span class="pill">XP ${state.xp}</span>
       </div>
 
       <div class="question-meta">
-        <span class="pill">Question ${state.currentQuestion + 1} / ${questions.length}</span>
-        <span class="pill">Toronto daily life</span>
+        <span class="pill">Question ${state.currentQuestion + 1} / ${activeQuestions.length}</span>
+        <span class="pill">${state.reviewMode ? "Weak spots" : "Toronto daily life"}</span>
       </div>
 
       <div class="meter" aria-label="Mission progress">
@@ -213,6 +343,7 @@ function renderQuestion() {
       </div>
 
       <div class="actions">
+        <button class="secondary-btn" id="guessToggle" type="button">${state.guessedCurrent ? "Marked as guessed" : "I guessed this"}</button>
         <button class="primary-btn" id="submitAnswer" ${state.selectedAnswer === null ? "disabled" : ""}>Submit</button>
       </div>
     </section>
@@ -225,51 +356,67 @@ function renderQuestion() {
     });
   });
 
+  document.getElementById("guessToggle").addEventListener("click", () => {
+    state.guessedCurrent = !state.guessedCurrent;
+    renderQuestion();
+  });
+
   document.getElementById("submitAnswer").addEventListener("click", submitAnswer);
 }
 
 function submitAnswer() {
-  const question = questions[state.currentQuestion];
+  const activeQuestions = getActiveQuestions();
+  const question = activeQuestions[state.currentQuestion];
   const correctIndex = getCorrectIndex(question);
   const isCorrect = state.selectedAnswer === correctIndex;
 
-  state.answers.push(isCorrect);
+  state.answers.push({
+    questionId: question.id,
+    skill: question.skill,
+    isCorrect,
+    guessed: state.guessedCurrent,
+    selectedIndex: state.selectedAnswer,
+    correctIndex
+  });
+
   if (isCorrect) state.xp += xpPerCorrect;
   state.screen = "feedback";
   render();
 }
 
 function renderFeedback() {
-  const question = questions[state.currentQuestion];
-  const isCorrect = state.answers[state.answers.length - 1];
+  const activeQuestions = getActiveQuestions();
+  const question = activeQuestions[state.currentQuestion];
+  const answer = state.answers[state.answers.length - 1];
   const correctIndex = getCorrectIndex(question);
   const correctAnswer = question.options[correctIndex];
-  const selectedAnswer = question.options[state.selectedAnswer];
-  const earnedXp = isCorrect ? xpPerCorrect : 0;
+  const selectedAnswer = question.options[answer.selectedIndex];
+  const earnedXp = answer.isCorrect ? xpPerCorrect : 0;
 
   app.innerHTML = `
     <section class="panel mission-card">
       <div class="mission-head">
         <div>
-          <p class="eyebrow">Mission 1: Coffee Shop</p>
-          <h2>${isCorrect ? "Correct" : "Incorrect"}</h2>
+          <p class="eyebrow">${state.reviewMode ? "Review Mode" : "Mission 1: Coffee Shop"}</p>
+          <h2>${answer.isCorrect ? "Correct" : "Incorrect"}</h2>
           <div class="review-line">
             <p><strong>Question:</strong> ${question.question}</p>
             <p><strong>Your answer:</strong> ${selectedAnswer}</p>
+            ${answer.guessed ? `<p><strong>Marked:</strong> Guessed / Not sure</p>` : ""}
           </div>
         </div>
         <span class="pill">XP ${state.xp}</span>
       </div>
 
-      <div class="feedback-result ${isCorrect ? "correct" : "incorrect"}">
+      <div class="feedback-result ${answer.isCorrect ? "correct" : "incorrect"}">
         +${earnedXp} XP
       </div>
 
-      ${isCorrect ? "" : `<p><strong>Correct answer:</strong> ${correctAnswer}</p>`}
+      ${answer.isCorrect ? "" : `<p><strong>Correct answer:</strong> ${correctAnswer}</p>`}
 
       <div class="options" aria-label="Answered options">
         ${question.options.map((option, index) => {
-          const className = index === correctIndex ? "correct" : index === state.selectedAnswer ? "wrong" : "";
+          const className = index === correctIndex ? "correct" : index === answer.selectedIndex ? "wrong" : "";
           return `<button class="option ${className}" type="button" disabled>${option}</button>`;
         }).join("")}
       </div>
@@ -299,39 +446,86 @@ function renderFeedback() {
 }
 
 function nextQuestion() {
-  if (state.currentQuestion === questions.length - 1) {
+  const activeQuestions = getActiveQuestions();
+
+  if (state.currentQuestion === activeQuestions.length - 1) {
     finishMission();
     return;
   }
 
   state.currentQuestion += 1;
   state.selectedAnswer = null;
+  state.guessedCurrent = false;
   state.screen = "question";
   render();
 }
 
 function finishMission() {
+  const activeQuestions = getActiveQuestions();
   const score = getScore();
-  state.readiness = Math.max(state.readiness, Math.round((score / questions.length) * 2));
+  const wrongAnswers = getWrongAnswers();
+  const guessedAnswers = getGuessedAnswers();
+  const readinessGain = Math.round((score / activeQuestions.length) * 2);
+
+  state.progress.totalXp += state.xp;
+  state.progress.readiness = Math.max(state.progress.readiness || 0, readinessGain);
+  state.readiness = state.progress.readiness;
+
+  state.answers.forEach((answer) => {
+    if (answer.isCorrect) {
+      const skill = answer.skill || "vocabulary";
+      if (!state.progress.skillXp[skill]) state.progress.skillXp[skill] = 0;
+      state.progress.skillXp[skill] += xpPerCorrect;
+    }
+  });
+
+  state.progress.wrongQuestionIds = uniqueIds([
+    ...state.progress.wrongQuestionIds,
+    ...wrongAnswers.map((answer) => answer.questionId)
+  ]);
+
+  state.progress.guessedQuestionIds = uniqueIds([
+    ...state.progress.guessedQuestionIds,
+    ...guessedAnswers.map((answer) => answer.questionId)
+  ]);
+
+  if (!state.reviewMode && !state.progress.completedMissions.includes("coffee_shop")) {
+    state.progress.completedMissions.push("coffee_shop");
+  }
+
+  state.progress.lastAttempt = {
+    mission: state.reviewMode ? "Coffee Shop Review" : "Coffee Shop",
+    score,
+    total: activeQuestions.length,
+    xp: state.xp,
+    wrongCount: wrongAnswers.length,
+    guessedCount: guessedAnswers.length,
+    completedAt: new Date().toISOString()
+  };
+
+  saveProgress();
   state.screen = "complete";
   render();
 }
 
 function renderComplete() {
+  const activeQuestions = getActiveQuestions();
   const score = getScore();
-  const scorePercent = Math.round((score / questions.length) * 100);
-  const situationPercent = Math.round(((state.answers.length + score) / (questions.length * 2)) * 100);
+  const scorePercent = Math.round((score / activeQuestions.length) * 100);
+  const wrongCount = getWrongAnswers().length;
+  const guessedCount = getGuessedAnswers().length;
+  const situationPercent = Math.round(((state.answers.length + score) / (activeQuestions.length * 2)) * 100);
 
   app.innerHTML = `
     <section class="panel complete-card">
-      <p class="eyebrow">Coffee Shop Stamp Earned</p>
-      <h2>Mission Complete</h2>
+      <p class="eyebrow">${state.reviewMode ? "Review Complete" : "Coffee Shop Stamp Earned"}</p>
+      <h2>${state.reviewMode ? "Review Complete" : "Mission Complete"}</h2>
       <p>You practiced a real Canadian coffee shop situation with TEF-style practical French.</p>
 
       <div class="score-row">
         <div class="stat-card">
           <span class="stat-label">Final Score</span>
-          <strong>${score} / ${questions.length}</strong>
+          <strong>${score} / ${activeQuestions.length}</strong>
         </div>
         <div class="stat-card">
           <span class="stat-label">XP Earned</span>
@@ -339,7 +533,15 @@ function renderComplete() {
         </div>
         <div class="stat-card">
           <span class="stat-label">TEF Readiness</span>
-          <strong>${state.readiness}%</strong>
+          <strong>${state.progress.readiness}%</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Wrong Questions</span>
+          <strong>${wrongCount}</strong>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Guessed Questions</span>
+          <strong>${guessedCount}</strong>
         </div>
       </div>
 
@@ -354,7 +556,7 @@ function renderComplete() {
         </div>
       </div>
 
-      <p class="next-step">Next: Complete more missions to build your TEF profile.</p>
+      <p class="next-step">Next: Review wrong and guessed questions to build a stronger TEF profile.</p>
 
       <div class="actions">
         <button class="secondary-btn" id="backToJourney">Back to Canada Journey</button>
@@ -364,6 +566,8 @@ function renderComplete() {
 
   document.getElementById("backToJourney").addEventListener("click", () => {
     state.screen = "home";
+    state.activeQuestions = [];
+    state.reviewMode = false;
     render();
   });
 }
