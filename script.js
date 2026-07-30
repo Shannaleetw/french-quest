@@ -2,6 +2,8 @@ let questions = [];
 
 const storageKey = "frenchQuestProgressV03";
 const xpPerCorrect = 10;
+const waitlistUrl = "#";
+const feedbackUrl = "#";
 
 const defaultProgress = {
   totalXp: 0,
@@ -226,6 +228,34 @@ function getReviewQuestions() {
   return questions.filter((question) => ids.includes(question.id));
 }
 
+function handleExternalAction(type) {
+  if (type === "waitlist" && waitlistUrl !== "#") {
+    window.open(waitlistUrl, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  if (type === "feedback" && feedbackUrl !== "#") {
+    window.open(feedbackUrl, "_blank", "noopener,noreferrer");
+    return;
+  }
+
+  const message = type === "waitlist"
+    ? "Waitlist form is coming next. For now, French Quest is in private testing."
+    : "Feedback form is coming next. For now, please send feedback directly to Shanna.";
+
+  alert(message);
+}
+
+function attachLaunchButtons() {
+  document.querySelectorAll("[data-action='waitlist']").forEach((button) => {
+    button.addEventListener("click", () => handleExternalAction("waitlist"));
+  });
+
+  document.querySelectorAll("[data-action='feedback']").forEach((button) => {
+    button.addEventListener("click", () => handleExternalAction("feedback"));
+  });
+}
+
 function renderHome() {
   const skills = getSkillProfile();
   const lastAttempt = state.progress.lastAttempt;
@@ -233,6 +263,22 @@ function renderHome() {
   const hasCompletedCoffeeShop = state.progress.completedMissions.includes("coffee_shop");
 
   app.innerHTML = `
+    <section class="panel launch-hero">
+      <p class="eyebrow">Launch Version 1</p>
+      <h2>Practice TEF Canada French through real Canadian life missions.</h2>
+      <p class="launch-copy">French Quest helps TEF Canada learners practice everyday French for real situations: ordering coffee, shopping for groceries, and visiting a bank.</p>
+      <div class="launch-points">
+        <span>Original TEF-style questions</span>
+        <span>Wrong-answer review</span>
+        <span>Guessed-question tracking</span>
+        <span>Timed practice</span>
+      </div>
+      <div class="actions launch-actions">
+        <button class="primary-btn" data-action="waitlist">Join Early Access List</button>
+        <button class="secondary-btn" data-action="feedback">Give Feedback</button>
+      </div>
+    </section>
+
     <section class="screen home-grid">
       <div class="panel readiness-card">
         <div class="readiness-top">
@@ -289,13 +335,13 @@ function renderHome() {
           <div class="route-stop">
             <div class="route-icon" aria-hidden="true">BAG</div>
             <p class="route-name">Grocery Store</p>
-            <span class="route-state">Locked</span>
+            <span class="route-state">Coming Soon</span>
           </div>
           <div class="route-arrow" aria-hidden="true">|</div>
           <div class="route-stop">
             <div class="route-icon" aria-hidden="true">$</div>
             <p class="route-name">Banking</p>
-            <span class="route-state">Locked</span>
+            <span class="route-state">Coming Soon</span>
           </div>
         </div>
 
@@ -306,7 +352,32 @@ function renderHome() {
         </div>
       </div>
     </section>
+
+    <section class="screen launch-grid">
+      <div class="panel info-panel">
+        <p class="eyebrow">About French Quest</p>
+        <h2>Built for practical TEF Canada preparation.</h2>
+        <p>French Quest is for learners who want more than grammar drills. Each mission uses simple real-life situations to practice vocabulary, reading, responses, and test-style thinking.</p>
+      </div>
+
+      <div class="panel info-panel">
+        <p class="eyebrow">Early Access</p>
+        <h2>Get new missions when they launch.</h2>
+        <p>Grocery Store and Banking missions are coming next. Join the early access list to get updates when new TEF practice missions are added.</p>
+        <div class="actions">
+          <button class="primary-btn" data-action="waitlist">Join Early Access List</button>
+        </div>
+      </div>
+
+      <div class="panel info-panel disclaimer-panel">
+        <p class="eyebrow">Disclaimer</p>
+        <h2>Independent practice tool.</h2>
+        <p>French Quest is an independent TEF Canada practice tool. All questions are original and created for learning purposes. French Quest is not affiliated with or endorsed by TEF, Le français des affaires, or any official testing organization. Readiness indicators are for practice only and do not guarantee official scores.</p>
+      </div>
+    </section>
   `;
+
+  attachLaunchButtons();
 
   if (state.missionLoaded) {
     document.getElementById("startMission").addEventListener("click", () => startMission({ randomizeQuestions: false, randomizeOptions: false, reviewMode: false }));
@@ -620,11 +691,23 @@ function renderComplete() {
 
       <p class="next-step">Next: Review wrong and guessed questions to build a stronger TEF profile.</p>
 
+      <div class="panel info-panel completion-cta">
+        <p class="eyebrow">Get New Missions</p>
+        <h2>Want Grocery Store and Banking next?</h2>
+        <p>Join the early access list to get notified when new TEF Canada practice missions launch.</p>
+        <div class="actions">
+          <button class="primary-btn" data-action="waitlist">Join Early Access List</button>
+          <button class="secondary-btn" data-action="feedback">Give Feedback</button>
+        </div>
+      </div>
+
       <div class="actions">
         <button class="secondary-btn" id="backToJourney">Back to Canada Journey</button>
       </div>
     </section>
   `;
+
+  attachLaunchButtons();
 
   document.getElementById("backToJourney").addEventListener("click", () => {
     state.screen = "home";
