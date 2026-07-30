@@ -1,4 +1,73 @@
-/* French Quest mobile and question-page UX refinements */
+/* French Quest launch, mobile, and question-page UX refinements */
+
+.launch-hero {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.launch-hero h2,
+.info-panel h2 {
+  margin-bottom: 4px;
+  color: var(--blue);
+  line-height: 1.1;
+}
+
+.launch-hero h2 {
+  max-width: 760px;
+  font-size: clamp(2rem, 5vw, 3.15rem);
+}
+
+.launch-copy,
+.info-panel p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  font-weight: 650;
+  line-height: 1.55;
+}
+
+.launch-points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.launch-points span {
+  padding: 9px 12px;
+  border: 1px solid rgba(25, 127, 131, 0.28);
+  border-radius: 999px;
+  background: #f0fbfa;
+  color: var(--teal-dark);
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+.launch-actions {
+  justify-content: flex-start;
+}
+
+.launch-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.info-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.disclaimer-panel {
+  grid-column: 1 / -1;
+}
+
+.disclaimer-panel p {
+  font-size: 0.96rem;
+}
+
+.completion-cta {
+  margin: 22px 0 0;
+  text-align: left;
+}
 
 .mission-card .mission-head h2 {
   font-size: 1.15rem;
@@ -52,6 +121,21 @@
 @media (max-width: 760px) {
   body {
     padding-bottom: 92px;
+  }
+
+  .launch-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .launch-hero h2 {
+    font-size: 1.85rem;
+  }
+
+  .launch-actions,
+  .info-panel .actions,
+  .completion-cta .actions {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .mission-card .mission-head h2 {
