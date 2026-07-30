@@ -18,9 +18,34 @@
   margin-top: 18px;
 }
 
+.mission-card .review-line {
+  margin-top: 6px;
+  gap: 7px;
+  font-size: 1.08rem;
+  line-height: 1.45;
+}
+
+.mission-card .review-line p {
+  margin-bottom: 0;
+}
+
+.mission-card .review-line strong {
+  font-size: 1.02rem;
+}
+
+.feedback-result {
+  margin-top: 6px;
+  margin-bottom: 18px;
+  font-size: 1.05rem;
+}
+
 @media (min-width: 761px) {
   .mission-card .mission-head h2 {
     font-size: 1.2rem;
+  }
+
+  .mission-card .mission-head:has(.review-line) h2 {
+    font-size: 1.45rem;
   }
 }
 
@@ -31,6 +56,14 @@
 
   .mission-card .mission-head h2 {
     font-size: 1.08rem;
+  }
+
+  .mission-card .mission-head:has(.review-line) h2 {
+    font-size: 1.35rem;
+  }
+
+  .mission-card .review-line {
+    font-size: 1rem;
   }
 
   .question-text {
