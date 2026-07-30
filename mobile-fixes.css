@@ -1,0 +1,46 @@
+/* French Quest mobile and question-page UX refinements */
+
+.mission-card .mission-head h2 {
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  line-height: 1.12;
+}
+
+.mission-card .mission-head {
+  margin-bottom: 12px;
+}
+
+.mission-card .question-text {
+  margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+  body {
+    padding-bottom: 92px;
+  }
+
+  .mission-card .mission-head h2 {
+    font-size: 1.28rem;
+  }
+
+  .question-text {
+    font-size: clamp(1.22rem, 6vw, 1.55rem);
+    line-height: 1.28;
+  }
+
+  .mission-card .actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin: 18px -18px -18px;
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 -12px 28px rgba(38, 49, 61, 0.12);
+    backdrop-filter: blur(12px);
+  }
+
+  .mission-card .actions .primary-btn,
+  .mission-card .actions .secondary-btn {
+    min-height: 46px;
+  }
+}
