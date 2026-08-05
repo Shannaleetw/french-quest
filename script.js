@@ -2,7 +2,7 @@ let questions = [];
 
 const storageKey = "frenchQuestProgressV03";
 const xpPerCorrect = 10;
-const waitlistUrl = "#";
+const waitlistUrl = "https://forms.gle/cgmTvvnV7hXWH4gQ8";
 const feedbackUrl = "#";
 
 const defaultProgress = {
@@ -691,10 +691,10 @@ function renderComplete() {
 
       <p class="next-step">Next: Review wrong and guessed questions to build a stronger TEF profile.</p>
 
-      <div class="panel info-panel completion-cta">
-        <p class="eyebrow">Get New Missions</p>
-        <h2>Want Grocery Store and Banking next?</h2>
-        <p>Join the early access list to get notified when new TEF Canada practice missions launch.</p>
+      <div class="panel info-panel early-access-card">
+        <p class="eyebrow">Early Access</p>
+        <h2>Want new missions next?</h2>
+        <p>Join the early access list to get updates when Grocery Store, Banking, and other TEF-style missions launch.</p>
         <div class="actions">
           <button class="primary-btn" data-action="waitlist">Join Early Access List</button>
           <button class="secondary-btn" data-action="feedback">Give Feedback</button>
