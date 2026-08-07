@@ -153,8 +153,7 @@ function getSkillProfile() {
   return {
     "Vocabulary XP": skillXp.vocabulary || 0,
     "Reading XP": skillXp.reading || 0,
-    "Situation XP": skillXp.situation || 0,
-    "Expression XP": skillXp.expression || 0
+    "Situation XP": skillXp.situation || 0
   };
 }
 
@@ -284,11 +283,11 @@ function renderHome() {
         <div class="readiness-top">
           <div>
             <p class="eyebrow">Passport Progress</p>
-            <h2>TEF Readiness</h2>
+            <h2>TEF Practice Progress</h2>
           </div>
           <div class="readiness-number">${state.progress.readiness}%</div>
         </div>
-        <div class="meter" aria-label="TEF Readiness ${state.progress.readiness}%">
+        <div class="meter" aria-label="TEF Practice Progress ${state.progress.readiness}%">
           <div class="meter-fill" style="--value: ${state.progress.readiness}%"></div>
         </div>
         <div class="skill-grid">
@@ -314,15 +313,15 @@ function renderHome() {
         <div class="journey-title">
           <div>
             <p class="eyebrow">Canada Journey</p>
-            <h2>Toronto</h2>
+            <h2>Canada</h2>
           </div>
           <div class="leaf" aria-hidden="true">MAPLE</div>
         </div>
 
         <div class="route" aria-label="Canada Journey">
           <div class="route-stop">
-            <div class="route-icon" aria-hidden="true">TO</div>
-            <p class="route-name">Toronto</p>
+            <div class="route-icon" aria-hidden="true">CA</div>
+            <p class="route-name">Canada</p>
             <span class="route-state">Start</span>
           </div>
           <div class="route-arrow" aria-hidden="true">|</div>
@@ -364,6 +363,7 @@ function renderHome() {
         <p class="eyebrow">Early Access</p>
         <h2>Get new missions when they launch.</h2>
         <p>Grocery Store and Banking missions are coming next. Join the early access list to get updates when new TEF practice missions are added.</p>
+        <p>Your email will only be used for French Quest updates. You can unsubscribe anytime by contacting us.</p>
         <div class="actions">
           <button class="primary-btn" data-action="waitlist">Join Early Access List</button>
         </div>
@@ -372,7 +372,7 @@ function renderHome() {
       <div class="panel info-panel disclaimer-panel">
         <p class="eyebrow">Disclaimer</p>
         <h2>Independent practice tool.</h2>
-        <p>French Quest is an independent TEF Canada practice tool. All questions are original and created for learning purposes. French Quest is not affiliated with or endorsed by TEF, Le français des affaires, or any official testing organization. Readiness indicators are for practice only and do not guarantee official scores.</p>
+        <p>French Quest is an independent TEF Canada practice tool. All questions are original and created for learning purposes. French Quest is not affiliated with or endorsed by TEF, Le français des affaires, or any official testing organization. Practice progress indicators are for practice only and do not guarantee official scores.</p>
       </div>
     </section>
   `;
@@ -440,7 +440,7 @@ function renderQuestion() {
 
       <div class="question-meta">
         <span class="pill">Question ${state.currentQuestion + 1} / ${activeQuestions.length}</span>
-        <span class="pill">${state.reviewMode ? "Weak spots" : "Toronto daily life"}</span>
+        <span class="pill">${state.reviewMode ? "Weak spots" : "Canadian daily life"}</span>
       </div>
 
       <div class="meter" aria-label="Mission progress">
@@ -657,7 +657,7 @@ function renderComplete() {
           <strong>${state.xp}</strong>
         </div>
         <div class="stat-card">
-          <span class="stat-label">TEF Readiness</span>
+          <span class="stat-label">TEF Practice Progress</span>
           <strong>${state.progress.readiness}%</strong>
         </div>
         <div class="stat-card">
@@ -695,6 +695,7 @@ function renderComplete() {
         <p class="eyebrow">Early Access</p>
         <h2>Want new missions next?</h2>
         <p>Join the early access list to get updates when Grocery Store, Banking, and other TEF-style missions launch.</p>
+        <p>Your email will only be used for French Quest updates. You can unsubscribe anytime by contacting us.</p>
         <div class="actions">
           <button class="primary-btn" data-action="waitlist">Join Early Access List</button>
           <button class="secondary-btn" data-action="feedback">Give Feedback</button>
