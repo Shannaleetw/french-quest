@@ -273,42 +273,12 @@ function renderHome() {
         <span>Timed practice</span>
       </div>
       <div class="actions launch-actions">
-        <button class="primary-btn" data-action="waitlist">Join Early Access List</button>
-        <button class="secondary-btn" data-action="feedback">Give Feedback</button>
+        <button class="primary-btn" id="heroStartMission" ${state.missionLoaded ? "" : "disabled"}>Start your first mission</button>
+        <button class="secondary-btn" data-action="waitlist">Join Early Access</button>
       </div>
     </section>
 
     <section class="screen home-grid">
-      <div class="panel readiness-card">
-        <div class="readiness-top">
-          <div>
-            <p class="eyebrow">Passport Progress</p>
-            <h2>TEF Practice Progress</h2>
-          </div>
-          <div class="readiness-number">${state.progress.readiness}%</div>
-        </div>
-        <div class="meter" aria-label="TEF Practice Progress ${state.progress.readiness}%">
-          <div class="meter-fill" style="--value: ${state.progress.readiness}%"></div>
-        </div>
-        <div class="skill-grid">
-          ${Object.entries(skills).map(([label, value]) => `
-            <div class="skill-tile">
-              <span>${label}</span>
-              <strong>${value}</strong>
-            </div>
-          `).join("")}
-        </div>
-        ${lastAttempt ? `
-          <div class="stat-card">
-            <span class="stat-label">Last Attempt</span>
-            <strong>${lastAttempt.score} / ${lastAttempt.total}</strong>
-            <p class="next-step">${formatDateTime(lastAttempt.completedAt)} · Wrong: ${lastAttempt.wrongCount} · Guessed: ${lastAttempt.guessedCount} · Time: ${formatDuration(lastAttempt.totalTimeMs)}</p>
-          </div>
-        ` : `
-          <p class="next-step">Start your first mission to build your TEF profile.</p>
-        `}
-      </div>
-
       <div class="panel journey">
         <div class="journey-title">
           <div>
@@ -350,6 +320,36 @@ function renderHome() {
           ${reviewCount ? `<button class="secondary-btn" id="reviewMission">Review ${reviewCount} Weak Spots</button>` : ""}
         </div>
       </div>
+
+      <div class="panel readiness-card">
+        <div class="readiness-top">
+          <div>
+            <p class="eyebrow">Practice Indicator</p>
+            <h2>TEF Practice Progress</h2>
+          </div>
+          <div class="readiness-number">${state.progress.readiness}%</div>
+        </div>
+        <div class="meter" aria-label="TEF Practice Progress ${state.progress.readiness}%">
+          <div class="meter-fill" style="--value: ${state.progress.readiness}%"></div>
+        </div>
+        <div class="skill-grid">
+          ${Object.entries(skills).map(([label, value]) => `
+            <div class="skill-tile">
+              <span>${label}</span>
+              <strong>${value}</strong>
+            </div>
+          `).join("")}
+        </div>
+        ${lastAttempt ? `
+          <div class="stat-card">
+            <span class="stat-label">Last Attempt</span>
+            <strong>${lastAttempt.score} / ${lastAttempt.total}</strong>
+            <p class="next-step">${formatDateTime(lastAttempt.completedAt)} · Wrong: ${lastAttempt.wrongCount} · Guessed: ${lastAttempt.guessedCount} · Time: ${formatDuration(lastAttempt.totalTimeMs)}</p>
+          </div>
+        ` : `
+          <p class="next-step">Start your first mission to build your TEF profile.</p>
+        `}
+      </div>
     </section>
 
     <section class="screen launch-grid">
@@ -380,6 +380,7 @@ function renderHome() {
   attachLaunchButtons();
 
   if (state.missionLoaded) {
+    document.getElementById("heroStartMission").addEventListener("click", () => startMission({ randomizeQuestions: false, randomizeOptions: false, reviewMode: false }));
     document.getElementById("startMission").addEventListener("click", () => startMission({ randomizeQuestions: false, randomizeOptions: false, reviewMode: false }));
 
     const retakeButton = document.getElementById("retakeMission");

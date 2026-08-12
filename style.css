@@ -135,13 +135,13 @@ h1 {
 }
 
 .home-grid {
-  grid-template-columns: minmax(0, 0.92fr) minmax(300px, 1.08fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
   align-items: start;
 }
 
 .readiness-card {
   display: grid;
-  gap: 22px;
+  gap: 18px;
 }
 
 .readiness-top {
@@ -153,7 +153,7 @@ h1 {
 
 .readiness-number {
   color: var(--teal-dark);
-  font-size: clamp(2.8rem, 10vw, 5rem);
+  font-size: clamp(2.25rem, 7vw, 3.6rem);
   font-weight: 900;
   line-height: 1;
 }

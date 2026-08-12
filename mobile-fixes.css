@@ -132,10 +132,16 @@
   }
 
   .launch-actions,
+  .journey .actions,
   .info-panel .actions,
   .completion-cta .actions {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .journey .actions .primary-btn {
+    width: 100%;
+    min-height: 54px;
   }
 
   .mission-card .mission-head h2 {
