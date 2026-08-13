@@ -1,0 +1,502 @@
+[
+  {
+    "id": "GS001",
+    "mission": "grocery_store",
+    "part": "Part 1: Quick Confidence Warm-up",
+    "question_type": "vocabulary",
+    "question": "What does \"rayon\" mean in a grocery store?",
+    "options": [
+      "receipt",
+      "aisle / section",
+      "bag",
+      "discount"
+    ],
+    "answer": "B",
+    "vocabulary": "rayon = aisle / section",
+    "pattern": "Je cherche le rayon des produits laitiers.",
+    "tef_tip": "在超市裡，rayon 常指某一區或走道，例如 dairy section、fruit section。這比單純背食物名稱更有生活閱讀價值。",
+    "skill": "vocabulary",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS002",
+    "mission": "grocery_store",
+    "part": "Part 1: Quick Confidence Warm-up",
+    "question_type": "vocabulary",
+    "question": "What does \"sac\" mean?",
+    "options": [
+      "receipt",
+      "discount",
+      "bag",
+      "card"
+    ],
+    "answer": "C",
+    "vocabulary": "sac = bag",
+    "pattern": "Voulez-vous un sac ?",
+    "tef_tip": "超市結帳時很常被問要不要袋子。看到 sac 要直接想到 bag。",
+    "skill": "vocabulary",
+    "difficulty": "A1",
+    "status": "draft"
+  },
+  {
+    "id": "GS003",
+    "mission": "grocery_store",
+    "part": "Part 1: Quick Confidence Warm-up",
+    "question_type": "vocabulary",
+    "question": "What does \"caisse\" mean in a grocery store?",
+    "options": [
+      "entrance",
+      "checkout",
+      "discount",
+      "aisle"
+    ],
+    "answer": "B",
+    "vocabulary": "caisse = checkout / cash register",
+    "pattern": "La caisse est fermée.",
+    "tef_tip": "在商店裡，caisse 通常是結帳櫃檯或收銀台，不是「箱子」的意思。",
+    "skill": "vocabulary",
+    "difficulty": "A1",
+    "status": "draft"
+  },
+  {
+    "id": "GS004",
+    "mission": "grocery_store",
+    "part": "Part 1: Quick Confidence Warm-up",
+    "question_type": "vocabulary",
+    "question": "What does \"rabais\" mean?",
+    "options": [
+      "receipt",
+      "bag",
+      "card",
+      "discount"
+    ],
+    "answer": "D",
+    "vocabulary": "rabais = discount",
+    "pattern": "Il y a un rabais de 20 %.",
+    "tef_tip": "看到 rabais 要想到折扣。TEF 生活閱讀常會出現促銷或折扣資訊。",
+    "skill": "vocabulary",
+    "difficulty": "A1",
+    "status": "draft"
+  },
+  {
+    "id": "GS005",
+    "mission": "grocery_store",
+    "part": "Part 1: Quick Confidence Warm-up",
+    "question_type": "vocabulary",
+    "question": "What does \"carte de fidélité\" mean?",
+    "options": [
+      "payment card",
+      "shopping list",
+      "loyalty card",
+      "receipt"
+    ],
+    "answer": "C",
+    "vocabulary": "carte de fidélité = loyalty card",
+    "pattern": "Vous avez une carte de fidélité ?",
+    "tef_tip": "在超市情境裡，carte de fidélité 是會員卡，不一定是付款卡。要看完整詞組判斷意思。",
+    "skill": "vocabulary",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS006",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A sign says: \"Paiement par carte seulement.\" What does it mean?",
+    "options": [
+      "You can pay by cash.",
+      "You need a loyalty card.",
+      "You can only pay by card.",
+      "You can pay later."
+    ],
+    "answer": "C",
+    "vocabulary": "paiement = payment / carte = card / seulement = only",
+    "pattern": "Paiement par carte seulement.",
+    "tef_tip": "看到 seulement 要想到 only。這類標示常考「顧客可以或不可以做什麼」。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS007",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A sign says: \"Caisse libre-service seulement.\" What should customers use?",
+    "options": [
+      "The self-checkout",
+      "The customer service desk",
+      "The main entrance",
+      "The regular checkout"
+    ],
+    "answer": "A",
+    "vocabulary": "caisse libre-service = self-checkout",
+    "pattern": "Veuillez utiliser la caisse libre-service.",
+    "tef_tip": "libre-service 是 self-service。超市裡常指自助結帳。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS008",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A sign says: \"Rabais de 20 % sur les produits laitiers.\" What is on sale?",
+    "options": [
+      "Fresh fruit",
+      "Bread",
+      "Reusable bags",
+      "Dairy products"
+    ],
+    "answer": "D",
+    "vocabulary": "produits laitiers = dairy products",
+    "pattern": "Rabais de 20 % sur les produits laitiers.",
+    "tef_tip": "TEF 生活閱讀常考優惠適用對象。看到 sur les produits laitiers，要抓到 discount applies to dairy products。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS009",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A notice says: \"Fermeture exceptionnelle à 18 h aujourd’hui.\" What time does the store close today?",
+    "options": [
+      "8 a.m.",
+      "6 p.m.",
+      "9 p.m.",
+      "10 p.m."
+    ],
+    "answer": "B",
+    "vocabulary": "fermeture = closing / aujourd’hui = today",
+    "pattern": "Fermeture exceptionnelle à 18 h aujourd’hui.",
+    "tef_tip": "exceptionnelle 表示特殊情況。這句不是一般營業時間，而是今天特別提早關門。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS010",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A sign says: \"Sacs réutilisables disponibles à la caisse.\" Where can customers get reusable bags?",
+    "options": [
+      "At the entrance",
+      "In the parking lot",
+      "At the checkout",
+      "Online"
+    ],
+    "answer": "C",
+    "vocabulary": "sacs réutilisables = reusable bags / caisse = checkout",
+    "pattern": "Les sacs sont disponibles à la caisse.",
+    "tef_tip": "disponibles à la caisse 表示在結帳處可以取得。TEF 常考地點資訊。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS011",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A notice says: \"Retours acceptés dans les 14 jours avec reçu.\" What is needed for a return?",
+    "options": [
+      "A receipt",
+      "A shopping bag",
+      "A loyalty card",
+      "A price tag"
+    ],
+    "answer": "A",
+    "vocabulary": "retours = returns / reçu = receipt",
+    "pattern": "Retours acceptés avec reçu.",
+    "tef_tip": "退貨規則常見於生活文件。avec reçu 表示需要收據。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS012",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A sign says: \"Carte de fidélité requise pour cette promotion.\" What do customers need?",
+    "options": [
+      "A receipt",
+      "A reusable bag",
+      "A shopping basket",
+      "A loyalty card"
+    ],
+    "answer": "D",
+    "vocabulary": "carte de fidélité = loyalty card / requise = required",
+    "pattern": "Une carte de fidélité est requise.",
+    "tef_tip": "requise 表示 required。這類題目要抓條件：要有會員卡才有優惠。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS013",
+    "mission": "grocery_store",
+    "part": "Part 2: Store Signs & Notices",
+    "question_type": "sign_understanding",
+    "question": "A notice says: \"Entrée par la porte principale seulement.\" What should customers do?",
+    "options": [
+      "Go to the checkout",
+      "Use the main door",
+      "Use the back door",
+      "Wait outside"
+    ],
+    "answer": "B",
+    "vocabulary": "entrée = entrance / porte principale = main door",
+    "pattern": "Entrée par la porte principale seulement.",
+    "tef_tip": "par 在這裡表示 through / by way of。看到 seulement 要抓限制。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS014",
+    "mission": "grocery_store",
+    "part": "Part 3: Staff-Customer Interaction",
+    "question_type": "best_response",
+    "question": "Staff: \"Vous cherchez quelque chose ?\" What is the best response?",
+    "options": [
+      "Oui, je cherche le lait.",
+      "C’est 20 %.",
+      "La caisse est fermée.",
+      "Je paie par carte."
+    ],
+    "answer": "A",
+    "vocabulary": "chercher = to look for",
+    "pattern": "Je cherche + noun.",
+    "tef_tip": "這句是店員問「你在找什麼嗎？」不是問付款或收據。回答可以用 Je cherche + 商品。",
+    "skill": "response",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS015",
+    "mission": "grocery_store",
+    "part": "Part 3: Staff-Customer Interaction",
+    "question_type": "best_response",
+    "question": "Staff: \"Voulez-vous un sac ?\" What is the best response?",
+    "options": [
+      "La caisse est là-bas.",
+      "C’est en rabais.",
+      "Oui, s’il vous plaît.",
+      "À 18 h."
+    ],
+    "answer": "C",
+    "vocabulary": "sac = bag",
+    "pattern": "Voulez-vous + noun ?",
+    "tef_tip": "店員問 Voulez-vous un sac ? 是問要不要袋子。最自然回答是 Oui, s’il vous plaît 或 Non, merci。",
+    "skill": "response",
+    "difficulty": "A1",
+    "status": "draft"
+  },
+  {
+    "id": "GS016",
+    "mission": "grocery_store",
+    "part": "Part 3: Staff-Customer Interaction",
+    "question_type": "best_response",
+    "question": "Staff: \"Vous avez une carte de fidélité ?\" What is the best response if you do not have one?",
+    "options": [
+      "Oui, c’est ouvert.",
+      "À la caisse.",
+      "Deux pains, merci.",
+      "Non, je n’en ai pas."
+    ],
+    "answer": "D",
+    "vocabulary": "carte de fidélité = loyalty card",
+    "pattern": "Je n’en ai pas.",
+    "tef_tip": "je n’en ai pas = I don’t have one. en 代替前面提到的東西，這句在生活對話很實用。",
+    "skill": "response",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS017",
+    "mission": "grocery_store",
+    "part": "Part 3: Staff-Customer Interaction",
+    "question_type": "best_response",
+    "question": "Staff: \"Ça fait 12,50 $.\" What is the best response?",
+    "options": [
+      "Je cherche les pommes.",
+      "Je paie par carte.",
+      "La porte est principale.",
+      "Le magasin est ouvert."
+    ],
+    "answer": "B",
+    "vocabulary": "Ça fait + price",
+    "pattern": "Je paie par carte.",
+    "tef_tip": "Ça fait 12,50 $ 是總金額。下一步通常是付款，所以回答付款方式最自然。",
+    "skill": "response",
+    "difficulty": "A1",
+    "status": "draft"
+  },
+  {
+    "id": "GS018",
+    "mission": "grocery_store",
+    "part": "Part 3: Staff-Customer Interaction",
+    "question_type": "best_response",
+    "question": "Staff: \"Voulez-vous un sac réutilisable ?\" What is the best response?",
+    "options": [
+      "Le magasin ferme à 18 h.",
+      "Je cherche le rayon des fruits.",
+      "Oui, s’il vous plaît.",
+      "C’est un rabais."
+    ],
+    "answer": "C",
+    "vocabulary": "sac réutilisable = reusable bag",
+    "pattern": "Voulez-vous un sac réutilisable ?",
+    "tef_tip": "這句是問你要不要環保袋。réutilisable = reusable，是加拿大超市很常見的生活字。",
+    "skill": "response",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS019",
+    "mission": "grocery_store",
+    "part": "Part 3: Staff-Customer Interaction",
+    "question_type": "best_response",
+    "question": "Staff: \"La caisse libre-service est là-bas.\" What is the best response?",
+    "options": [
+      "Je cherche les fruits.",
+      "Je n’ai pas de carte.",
+      "D’accord, merci.",
+      "C’est en rabais."
+    ],
+    "answer": "C",
+    "vocabulary": "là-bas = over there",
+    "pattern": "D’accord, merci.",
+    "tef_tip": "店員告訴你自助結帳在那邊。最自然的回應是 D’accord, merci。",
+    "skill": "response",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS020",
+    "mission": "grocery_store",
+    "part": "Part 4: Mini Reading Documents",
+    "question_type": "mini_reading",
+    "question": "Read the sign: \"Pommes — 2,99 $ / lb\". What is being sold?",
+    "options": [
+      "Pears",
+      "Oranges",
+      "Potatoes",
+      "Apples"
+    ],
+    "answer": "D",
+    "vocabulary": "pommes = apples",
+    "pattern": "Les pommes coûtent 2,99 $ / lb.",
+    "tef_tip": "超市價格標示常用「商品 + 價格」。先抓商品名，再看價格單位。",
+    "skill": "reading",
+    "difficulty": "A1",
+    "status": "draft"
+  },
+  {
+    "id": "GS021",
+    "mission": "grocery_store",
+    "part": "Part 4: Mini Reading Documents",
+    "question_type": "mini_reading",
+    "question": "Read the sign: \"Offre spéciale : deux pains pour 5 $.\" What is the offer?",
+    "options": [
+      "Two breads for $5",
+      "One bread for $5",
+      "Two bags for $5",
+      "Bread is 50% off"
+    ],
+    "answer": "A",
+    "vocabulary": "offre spéciale = special offer / pain = bread",
+    "pattern": "Deux pains pour 5 $.",
+    "tef_tip": "pour 在價格標示中常表示 for。deux pains pour 5 $ = two breads for $5。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS022",
+    "mission": "grocery_store",
+    "part": "Part 4: Mini Reading Documents",
+    "question_type": "mini_reading",
+    "question": "Read the notice: \"Produits laitiers : rabais de 20 % avec carte de fidélité.\" What do customers need to get the discount?",
+    "options": [
+      "A receipt",
+      "A reusable bag",
+      "A loyalty card",
+      "A coupon"
+    ],
+    "answer": "C",
+    "vocabulary": "avec carte de fidélité = with a loyalty card",
+    "pattern": "Rabais avec carte de fidélité.",
+    "tef_tip": "這題重點是條件。avec carte de fidélité 表示折扣需要會員卡。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS023",
+    "mission": "grocery_store",
+    "part": "Part 4: Mini Reading Documents",
+    "question_type": "mini_reading",
+    "question": "Read the notice: \"Magasin ouvert de 8 h à 21 h du lundi au samedi.\" When is the store open?",
+    "options": [
+      "From 9 a.m. to 8 p.m., every day",
+      "From 8 a.m. to 9 p.m., Monday to Saturday",
+      "From 8 a.m. to 9 p.m., Sunday only",
+      "From 8 p.m. to 9 p.m., Monday to Saturday"
+    ],
+    "answer": "B",
+    "vocabulary": "ouvert = open / de...à... = from...to...",
+    "pattern": "Ouvert de 8 h à 21 h.",
+    "tef_tip": "TEF 生活閱讀很常考營業時間。de 8 h à 21 h = from 8 to 21:00。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS024",
+    "mission": "grocery_store",
+    "part": "Part 4: Mini Reading Documents",
+    "question_type": "mini_reading",
+    "question": "Read the notice: \"Retours acceptés avec reçu dans les 14 jours.\" What is required for a return?",
+    "options": [
+      "A loyalty card only",
+      "A reusable bag",
+      "A phone call",
+      "A receipt within 14 days"
+    ],
+    "answer": "D",
+    "vocabulary": "retours = returns / reçu = receipt",
+    "pattern": "Retours acceptés avec reçu dans les 14 jours.",
+    "tef_tip": "這題要同時抓兩個資訊：需要收據，且期限是 14 天內。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  },
+  {
+    "id": "GS025",
+    "mission": "grocery_store",
+    "part": "Part 4: Mini Reading Documents",
+    "question_type": "mini_reading",
+    "question": "Read the notice: \"Caisse 3 fermée. Veuillez utiliser la caisse 4.\" What should customers do?",
+    "options": [
+      "Use checkout 4",
+      "Use checkout 3",
+      "Leave the store",
+      "Pay online"
+    ],
+    "answer": "A",
+    "vocabulary": "fermée = closed / veuillez utiliser = please use",
+    "pattern": "Veuillez utiliser la caisse 4.",
+    "tef_tip": "Veuillez + infinitive 是公告中常見的禮貌指示。這裡要抓「不要用 3 號，請用 4 號」。",
+    "skill": "reading",
+    "difficulty": "A2",
+    "status": "draft"
+  }
+]
