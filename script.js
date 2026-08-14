@@ -673,6 +673,10 @@ function renderComplete() {
   const totalTimeMs = getTotalAnswerTimeMs();
   const averageTimeMs = activeQuestions.length ? totalTimeMs / activeQuestions.length : 0;
   const situationPercent = Math.round(((state.answers.length + score) / (activeQuestions.length * 2)) * 100);
+  const reviewCount = getReviewQuestions().length;
+  const nextStepText = reviewCount === 0
+    ? "Great work — you cleared your weak spots for this mission. Next mission: Grocery Store — coming soon."
+    : "Next: Review wrong and guessed questions to build a stronger TEF profile.";
 
   app.innerHTML = `
     <section class="panel complete-card">
@@ -722,7 +726,7 @@ function renderComplete() {
         </div>
       </div>
 
-      <p class="next-step">Next: Review wrong and guessed questions to build a stronger TEF profile.</p>
+      <p class="next-step">${nextStepText}</p>
 
       <div class="panel info-panel early-access-card">
         <p class="eyebrow">Early Access</p>
@@ -736,12 +740,16 @@ function renderComplete() {
       </div>
 
       <div class="actions">
+        ${reviewCount ? `<button class="primary-btn" id="completeReviewMission">Review ${reviewCount} Weak Spots</button>` : ""}
         <button class="secondary-btn" id="backToJourney">Back to Canada Journey</button>
       </div>
     </section>
   `;
 
   attachLaunchButtons();
+
+  const completeReviewButton = document.getElementById("completeReviewMission");
+  if (completeReviewButton) completeReviewButton.addEventListener("click", startReviewMode);
 
   document.getElementById("backToJourney").addEventListener("click", () => {
     state.screen = "home";
