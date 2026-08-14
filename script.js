@@ -265,6 +265,7 @@ function renderHome() {
     <section class="panel launch-hero">
       <p class="eyebrow">Launch Version 1</p>
       <h2>Practice TEF Canada French through real Canadian life missions.</h2>
+      <p class="launch-copy">為中文使用者設計的 TEF Canada 法文情境練習工具。</p>
       <p class="launch-copy">French Quest helps TEF Canada learners practice everyday French for real situations: ordering coffee, shopping for groceries, and visiting a bank.</p>
       <div class="launch-points">
         <span>Original TEF-style questions</span>
@@ -305,13 +306,11 @@ function renderHome() {
             <div class="route-icon" aria-hidden="true">BAG</div>
             <div>
               <p class="route-name">Grocery Store</p>
-              <p class="route-preview">Read grocery signs, discounts, loyalty card notices, checkout instructions, and simple staff questions.</p>
+              <p class="route-preview">Practice grocery signs, discounts, checkout, and simple staff questions.</p>
               <ul class="route-preview-list">
-                <li>discounts and promotions</li>
-                <li>reusable bags</li>
+                <li>discounts</li>
                 <li>self-checkout</li>
-                <li>returns with receipt</li>
-                <li>store hours and notices</li>
+                <li>reusable bags</li>
               </ul>
             </div>
             <span class="route-state">Coming Soon</span>
@@ -321,7 +320,12 @@ function renderHome() {
             <div class="route-icon" aria-hidden="true">$</div>
             <div>
               <p class="route-name">Banking</p>
-              <p class="route-preview">Practice common banking situations, such as appointments, account services, cards, documents, and simple service counter questions.</p>
+              <p class="route-preview">Practice simple banking situations, account services, and service counter questions.</p>
+              <ul class="route-preview-list">
+                <li>appointments</li>
+                <li>cards and accounts</li>
+                <li>documents</li>
+              </ul>
             </div>
             <span class="route-state">Coming Soon</span>
           </div>
