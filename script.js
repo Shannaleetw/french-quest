@@ -602,6 +602,9 @@ function finishMission() {
   const score = getScore();
   const wrongAnswers = getWrongAnswers();
   const guessedAnswers = getGuessedAnswers();
+  const correctAnswerIds = state.answers
+    .filter((answer) => answer.isCorrect)
+    .map((answer) => answer.questionId);
   const totalTimeMs = getTotalAnswerTimeMs();
   const averageTimeMs = activeQuestions.length ? totalTimeMs / activeQuestions.length : 0;
   const readinessGain = Math.round((score / activeQuestions.length) * 2);
@@ -618,15 +621,27 @@ function finishMission() {
     }
   });
 
-  state.progress.wrongQuestionIds = uniqueIds([
-    ...state.progress.wrongQuestionIds,
-    ...wrongAnswers.map((answer) => answer.questionId)
-  ]);
+  if (state.reviewMode) {
+    state.progress.wrongQuestionIds = uniqueIds([
+      ...state.progress.wrongQuestionIds.filter((questionId) => !correctAnswerIds.includes(questionId)),
+      ...wrongAnswers.map((answer) => answer.questionId)
+    ]);
 
-  state.progress.guessedQuestionIds = uniqueIds([
-    ...state.progress.guessedQuestionIds,
-    ...guessedAnswers.map((answer) => answer.questionId)
-  ]);
+    state.progress.guessedQuestionIds = uniqueIds([
+      ...state.progress.guessedQuestionIds.filter((questionId) => !correctAnswerIds.includes(questionId)),
+      ...guessedAnswers.filter((answer) => !answer.isCorrect).map((answer) => answer.questionId)
+    ]);
+  } else {
+    state.progress.wrongQuestionIds = uniqueIds([
+      ...state.progress.wrongQuestionIds,
+      ...wrongAnswers.map((answer) => answer.questionId)
+    ]);
+
+    state.progress.guessedQuestionIds = uniqueIds([
+      ...state.progress.guessedQuestionIds,
+      ...guessedAnswers.map((answer) => answer.questionId)
+    ]);
+  }
 
   if (!state.reviewMode && !state.progress.completedMissions.includes("coffee_shop")) {
     state.progress.completedMissions.push("coffee_shop");
