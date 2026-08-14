@@ -268,6 +268,23 @@ h1 {
   font-weight: 850;
 }
 
+.route-preview {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.route-preview-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
 .route-state {
   color: var(--muted);
   font-size: 0.86rem;
@@ -533,6 +550,11 @@ h1 {
   }
 
   .route-state {
+    grid-column: 2;
+  }
+
+  .route-preview,
+  .route-preview-list {
     grid-column: 2;
   }
 }

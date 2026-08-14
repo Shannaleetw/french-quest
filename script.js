@@ -303,13 +303,26 @@ function renderHome() {
           <div class="route-arrow" aria-hidden="true">|</div>
           <div class="route-stop">
             <div class="route-icon" aria-hidden="true">BAG</div>
-            <p class="route-name">Grocery Store</p>
+            <div>
+              <p class="route-name">Grocery Store</p>
+              <p class="route-preview">Read grocery signs, discounts, loyalty card notices, checkout instructions, and simple staff questions.</p>
+              <ul class="route-preview-list">
+                <li>discounts and promotions</li>
+                <li>reusable bags</li>
+                <li>self-checkout</li>
+                <li>returns with receipt</li>
+                <li>store hours and notices</li>
+              </ul>
+            </div>
             <span class="route-state">Coming Soon</span>
           </div>
           <div class="route-arrow" aria-hidden="true">|</div>
           <div class="route-stop">
             <div class="route-icon" aria-hidden="true">$</div>
-            <p class="route-name">Banking</p>
+            <div>
+              <p class="route-name">Banking</p>
+              <p class="route-preview">Practice common banking situations, such as appointments, account services, cards, documents, and simple service counter questions.</p>
+            </div>
             <span class="route-state">Coming Soon</span>
           </div>
         </div>
