@@ -414,7 +414,7 @@
     "answer": "A",
     "vocabulary": "menu du jour = daily special; croissant = croissant",
     "pattern": "Café + croissant = 5,99 $.",
-    "tef_tip": "TEF 閱讀常出現菜單、廣告與簡短公告。",
+    "tef_tip": "看到 + 或組合價格時，先確認套餐包含哪些品項，不要只盯著價格。",
     "skill": "reading",
     "difficulty": "A1",
     "status": "draft"
@@ -434,7 +434,7 @@
     "answer": "B",
     "vocabulary": "heures d'ouverture = opening hours; lundi-vendredi = Monday-Friday",
     "pattern": "lundi-vendredi 7h-18h",
-    "tef_tip": "TEF 閱讀常測試營業時間與日期理解。",
+    "tef_tip": "營業時間題先分開看「星期」和「時間」。這題關鍵是 lundi-vendredi，先確認開放的日期範圍。",
     "skill": "reading",
     "difficulty": "A1",
     "status": "draft"
@@ -454,7 +454,7 @@
     "answer": "C",
     "vocabulary": "paiement = payment; carte = card; seulement = only",
     "pattern": "Paiement par carte seulement.",
-    "tef_tip": "公告與標示是 TEF 日常閱讀高頻題型。",
+    "tef_tip": "看到 seulement 要特別注意限制條件，表示「只有／僅限」。這類字常直接決定正確答案。",
     "skill": "reading",
     "difficulty": "A2",
     "status": "draft"
@@ -474,7 +474,7 @@
     "answer": "D",
     "vocabulary": "commande = order; numéro = number; prête = ready",
     "pattern": "Votre commande numéro 18 est prête.",
-    "tef_tip": "TEF 會測試使用者能否理解服務場所的簡短訊息。",
+    "tef_tip": "看到 commande + prête，不要只翻譯句子；要進一步判斷顧客下一步應該去取餐。",
     "skill": "reading",
     "difficulty": "A2",
     "status": "draft"
@@ -494,7 +494,7 @@
     "answer": "B",
     "vocabulary": "fermé = closed; aujourd'hui = today; rénovation = renovation",
     "pattern": "Fermé aujourd'hui pour rénovation.",
-    "tef_tip": "TEF 閱讀常出現公告原因與狀態判斷。",
+    "tef_tip": "公告題先抓「目前狀態」再看原因。Fermé aujourd’hui 已經先告訴你今天不營業。",
     "skill": "reading",
     "difficulty": "A2",
     "status": "draft"
