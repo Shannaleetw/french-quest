@@ -174,7 +174,7 @@
     "answer": "C",
     "vocabulary": "bonjour = hello",
     "pattern": "Bonjour !",
-    "tef_tip": "加拿大法語區進店最常見的問候語。",
+    "tef_tip": "Bonjour 在服務情境通常只是開場問候。先確認對話功能，不要把簡單問候誤判成其他資訊。",
     "skill": "situation",
     "difficulty": "A1",
     "status": "draft"
@@ -194,7 +194,7 @@
     "answer": "B",
     "vocabulary": "à emporter = takeout; sur place = dine-in",
     "pattern": "À emporter ou sur place ?",
-    "tef_tip": "加拿大咖啡店與餐廳最常見的問題之一。",
+    "tef_tip": "ou 連接兩個選項時，先抓兩邊的關鍵詞。這類題重點是辨認對方要你做哪一種選擇。",
     "skill": "situation",
     "difficulty": "A1",
     "status": "draft"
@@ -214,7 +214,7 @@
     "answer": "C",
     "vocabulary": "ça fait = the total is",
     "pattern": "Ça fait + montant.",
-    "tef_tip": "加拿大法語區結帳時的高頻表達。",
+    "tef_tip": "看到 Ça fait + 金額，重點先抓金額：這通常是在告訴你結帳總額。",
     "skill": "situation",
     "difficulty": "A1",
     "status": "draft"
@@ -234,7 +234,7 @@
     "answer": "A",
     "vocabulary": "reçu = receipt",
     "pattern": "Voulez-vous + nom ?",
-    "tef_tip": "加拿大消費情境中經常出現。",
+    "tef_tip": "Voulez-vous… ? 是在詢問「要不要……」。先抓後面的名詞，判斷店員提供或確認的是什麼。",
     "skill": "situation",
     "difficulty": "A1",
     "status": "draft"
@@ -254,7 +254,7 @@
     "answer": "A",
     "vocabulary": "lait = milk",
     "pattern": "Avec + nom ?",
-    "tef_tip": "點咖啡時常見的簡短確認問句。",
+    "tef_tip": "服務人員常省略完整句，只說 Avec… ? 做確認。遇到短句時，要用前後情境補出完整意思。",
     "skill": "situation",
     "difficulty": "A1",
     "status": "draft"
@@ -274,7 +274,7 @@
     "answer": "B",
     "vocabulary": "commande = order; prête = ready",
     "pattern": "Votre commande est prête.",
-    "tef_tip": "加拿大連鎖咖啡店與餐廳高頻句型。",
+    "tef_tip": "看到 commande + prête，表示餐點已完成。這類題常測你能不能從狀態推斷下一步行動。",
     "skill": "situation",
     "difficulty": "A2",
     "status": "draft"
@@ -294,7 +294,7 @@
     "answer": "A",
     "vocabulary": "bonne journée = have a nice day",
     "pattern": "Merci, bonne journée !",
-    "tef_tip": "加拿大法語區離開商店時常見的結尾語。",
+    "tef_tip": "Merci, bonne journée 是結束服務互動的訊號。看到這類禮貌結尾，要判斷對話已進入收尾階段。",
     "skill": "situation",
     "difficulty": "A1",
     "status": "draft"
