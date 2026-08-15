@@ -14,7 +14,7 @@
     "answer": "B",
     "vocabulary": "café = coffee",
     "pattern": "Je prends un café.",
-    "tef_tip": "點餐最常見單字之一",
+    "tef_tip": "看到 Je prends + 飲品，先抓後面的品項。TEF 情境題常用點餐動作判斷顧客要什麼。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
@@ -34,7 +34,7 @@
     "answer": "C",
     "vocabulary": "thé = tea",
     "pattern": "Je voudrais un thé.",
-    "tef_tip": "飲品類核心字彙",
+    "tef_tip": "Je voudrais 常用來提出需求；聽到這個結構後，注意後面的名詞，通常就是對方想要的東西。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
@@ -54,7 +54,7 @@
     "answer": "C",
     "vocabulary": "lait = milk",
     "pattern": "Avec du lait.",
-    "tef_tip": "常見於咖啡與茶類訂製",
+    "tef_tip": "點餐題常用 avec + du/de la/des 表示「加／附……」。先抓配料，不要逐字翻。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
@@ -74,7 +74,7 @@
     "answer": "A",
     "vocabulary": "sucre = sugar",
     "pattern": "Avec du sucre.",
-    "tef_tip": "咖啡店高頻字彙",
+    "tef_tip": "看到 avec，先判斷後面的東西是「搭配／添加」的內容；這裡是在確認是否加糖。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
@@ -94,7 +94,7 @@
     "answer": "B",
     "vocabulary": "tasse = cup",
     "pattern": "Une tasse de café.",
-    "tef_tip": "餐飲情境常見名詞",
+    "tef_tip": "une tasse de + 飲品 是「一杯……」。看到容器 + de，先找 de 後面的內容物。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
@@ -114,7 +114,7 @@
     "answer": "C",
     "vocabulary": "menu = menu",
     "pattern": "Puis-je voir le menu ?",
-    "tef_tip": "加拿大餐廳高頻字彙",
+    "tef_tip": "看到 Puis-je voir… ?，先判斷說話者是在提出請求；這裡是想看菜單，不是在結帳。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
@@ -134,7 +134,7 @@
     "answer": "A",
     "vocabulary": "reçu = receipt",
     "pattern": "Puis-je avoir un reçu ?",
-    "tef_tip": "加拿大生活常需要索取收據",
+    "tef_tip": "Puis-je avoir… ? 常用來索取物品。先看後面的名詞，判斷對方具體想拿到什麼。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
@@ -154,7 +154,7 @@
     "answer": "C",
     "vocabulary": "addition = bill",
     "pattern": "L'addition, s'il vous plaît.",
-    "tef_tip": "法語區結帳必備表達",
+    "tef_tip": "L’addition, s’il vous plaît 是用餐結束、準備付款的訊號；看到 addition 就聯想到結帳。",
     "skill": "vocabulary",
     "difficulty": "A1",
     "status": "draft"
