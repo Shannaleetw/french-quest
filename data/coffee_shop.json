@@ -314,7 +314,7 @@
     "answer": "B",
     "vocabulary": "bonjour = hello",
     "pattern": "Bonjour !",
-    "tef_tip": "TEF 生活情境題常測試基本問候與回應。",
+    "tef_tip": "Best Response 題先看對話功能。對方只是問候時，回應也應維持在問候階段。",
     "skill": "expression",
     "difficulty": "A1",
     "status": "draft"
@@ -334,7 +334,7 @@
     "answer": "D",
     "vocabulary": "sur place = dine-in",
     "pattern": "Sur place, s'il vous plaît.",
-    "tef_tip": "能正確回應內用或外帶，是日常服務情境的基本能力。",
+    "tef_tip": "遇到二選一問句，答案通常要直接回應其中一個選項。先對應問題內容。",
     "skill": "expression",
     "difficulty": "A1",
     "status": "draft"
@@ -354,7 +354,7 @@
     "answer": "C",
     "vocabulary": "reçu = receipt; oui = yes",
     "pattern": "Oui, s'il vous plaît.",
-    "tef_tip": "TEF 情境題常要求理解問題並選出自然回應。",
+    "tef_tip": "Voulez-vous… ? 是 Yes/No 型問題。先判斷自己要回答「要／不要」，再選符合情境的簡短回應。",
     "skill": "expression",
     "difficulty": "A1",
     "status": "draft"
@@ -374,7 +374,7 @@
     "answer": "B",
     "vocabulary": "carte = card",
     "pattern": "Je paie par carte.",
-    "tef_tip": "付款方式是 TEF 日常生活與消費情境高頻內容。",
+    "tef_tip": "看到總金額代表對話進入付款階段。Best Response 要接續當下流程，這時最合理的是說明付款方式。",
     "skill": "expression",
     "difficulty": "A2",
     "status": "draft"
@@ -394,7 +394,7 @@
     "answer": "D",
     "vocabulary": "bonne journée = have a nice day",
     "pattern": "Bonne journée !",
-    "tef_tip": "離開商店時的禮貌回應有助於建立真實對話感。",
+    "tef_tip": "對方用 bonne journée 收尾時，回應也要完成收尾。",
     "skill": "expression",
     "difficulty": "A1",
     "status": "draft"
