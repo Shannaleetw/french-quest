@@ -9,6 +9,8 @@ const defaultProgress = {
   totalXp: 0,
   readiness: 0,
   lastAttempt: null,
+  lastMissionAttempt: null,
+  lastReviewAttempt: null,
   completedMissions: [],
   wrongQuestionIds: [],
   guessedQuestionIds: [],
@@ -49,7 +51,7 @@ function loadProgress() {
     if (!saved) return getFreshDefaultProgress();
 
     const parsed = JSON.parse(saved);
-    return {
+    const progress = {
       ...getFreshDefaultProgress(),
       ...parsed,
       skillXp: {
@@ -60,6 +62,16 @@ function loadProgress() {
       guessedQuestionIds: parsed.guessedQuestionIds || [],
       completedMissions: parsed.completedMissions || []
     };
+
+    if (!progress.lastMissionAttempt && parsed.lastAttempt?.mission !== "Coffee Shop Review") {
+      progress.lastMissionAttempt = parsed.lastAttempt || null;
+    }
+
+    if (!progress.lastReviewAttempt && parsed.lastAttempt?.mission === "Coffee Shop Review") {
+      progress.lastReviewAttempt = parsed.lastAttempt;
+    }
+
+    return progress;
   } catch (error) {
     console.error("Progress loading failed:", error);
     return getFreshDefaultProgress();
@@ -72,6 +84,10 @@ function saveProgress() {
 
 function uniqueIds(ids) {
   return [...new Set(ids.filter(Boolean))];
+}
+
+function getValidAttempt(attempt) {
+  return attempt && Number(attempt.total) > 0 ? attempt : null;
 }
 
 async function loadMissionData() {
@@ -257,7 +273,8 @@ function attachLaunchButtons() {
 
 function renderHome() {
   const skills = getSkillProfile();
-  const lastAttempt = state.progress.lastAttempt;
+  const lastMissionAttempt = getValidAttempt(state.progress.lastMissionAttempt);
+  const lastReviewAttempt = getValidAttempt(state.progress.lastReviewAttempt);
   const reviewCount = getReviewQuestions().length;
   const hasCompletedCoffeeShop = state.progress.completedMissions.includes("coffee_shop");
 
@@ -357,15 +374,22 @@ function renderHome() {
             </div>
           `).join("")}
         </div>
-        ${lastAttempt ? `
+        ${lastMissionAttempt ? `
           <div class="stat-card">
-            <span class="stat-label">Last Attempt</span>
-            <strong>${lastAttempt.score} / ${lastAttempt.total}</strong>
-            <p class="next-step">${formatDateTime(lastAttempt.completedAt)} · Wrong: ${lastAttempt.wrongCount} · Guessed: ${lastAttempt.guessedCount} · Time: ${formatDuration(lastAttempt.totalTimeMs)}</p>
+            <span class="stat-label">Last Mission Attempt</span>
+            <strong>${lastMissionAttempt.score} / ${lastMissionAttempt.total}</strong>
+            <p class="next-step">${formatDateTime(lastMissionAttempt.completedAt)} · Wrong: ${lastMissionAttempt.wrongCount} · Guessed: ${lastMissionAttempt.guessedCount} · Time: ${formatDuration(lastMissionAttempt.totalTimeMs)}</p>
           </div>
         ` : `
           <p class="next-step">Start your first mission to build your TEF profile.</p>
         `}
+        ${lastReviewAttempt ? `
+          <div class="stat-card">
+            <span class="stat-label">Last Review</span>
+            <strong>${lastReviewAttempt.score} / ${lastReviewAttempt.total}</strong>
+            <p class="next-step">${formatDateTime(lastReviewAttempt.completedAt)} · Wrong: ${lastReviewAttempt.wrongCount} · Guessed: ${lastReviewAttempt.guessedCount} · Time: ${formatDuration(lastReviewAttempt.totalTimeMs)}</p>
+          </div>
+        ` : ""}
       </div>
     </section>
 
@@ -647,7 +671,7 @@ function finishMission() {
     state.progress.completedMissions.push("coffee_shop");
   }
 
-  state.progress.lastAttempt = {
+  const attemptSummary = {
     mission: state.reviewMode ? "Coffee Shop Review" : "Coffee Shop",
     score,
     total: activeQuestions.length,
@@ -658,6 +682,13 @@ function finishMission() {
     averageTimeMs,
     completedAt: new Date().toISOString()
   };
+
+  if (state.reviewMode) {
+    state.progress.lastReviewAttempt = attemptSummary;
+  } else {
+    state.progress.lastMissionAttempt = attemptSummary;
+    state.progress.lastAttempt = attemptSummary;
+  }
 
   saveProgress();
   state.screen = "complete";
