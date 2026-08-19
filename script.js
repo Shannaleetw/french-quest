@@ -4,6 +4,12 @@ const storageKey = "frenchQuestProgressV03";
 const xpPerCorrect = 10;
 const waitlistUrl = "https://forms.gle/cgmTvvnV7hXWH4gQ8";
 const feedbackUrl = "#";
+const skillPerformanceLabels = {
+  vocabulary: "Vocabulary",
+  situation: "Situation",
+  expression: "Expression",
+  reading: "Reading"
+};
 
 const defaultProgress = {
   totalXp: 0,
@@ -164,13 +170,38 @@ function getTotalAnswerTimeMs() {
   return state.answers.reduce((total, answer) => total + (answer.timeSpentMs || 0), 0);
 }
 
-function getSkillProfile() {
-  const skillXp = state.progress.skillXp || defaultProgress.skillXp;
-  return {
-    "Vocabulary XP": skillXp.vocabulary || 0,
-    "Reading XP": skillXp.reading || 0,
-    "Situation XP": skillXp.situation || 0
-  };
+function calculateSkillPerformance(answers) {
+  const performance = Object.fromEntries(
+    Object.keys(skillPerformanceLabels).map((skill) => [
+      skill,
+      { correct: 0, total: 0, percent: null }
+    ])
+  );
+
+  answers.forEach((answer) => {
+    const skill = answer.skill || "vocabulary";
+    if (!performance[skill]) return;
+    performance[skill].total += 1;
+    if (answer.isCorrect) performance[skill].correct += 1;
+  });
+
+  Object.values(performance).forEach((result) => {
+    result.percent = result.total ? Math.round((result.correct / result.total) * 100) : null;
+  });
+
+  return performance;
+}
+
+function getSkillPerformanceTiles(skillPerformance) {
+  if (!skillPerformance) return [];
+
+  return Object.entries(skillPerformanceLabels).map(([skill, label]) => {
+    const result = skillPerformance[skill] || { correct: 0, total: 0, percent: null };
+    return {
+      label,
+      value: result.total ? `${result.percent}%` : "Not practiced"
+    };
+  });
 }
 
 function getCorrectIndex(question) {
@@ -272,9 +303,9 @@ function attachLaunchButtons() {
 }
 
 function renderHome() {
-  const skills = getSkillProfile();
   const lastMissionAttempt = getValidAttempt(state.progress.lastMissionAttempt);
   const lastReviewAttempt = getValidAttempt(state.progress.lastReviewAttempt);
+  const skillTiles = getSkillPerformanceTiles(lastMissionAttempt?.skillPerformance);
   const reviewCount = getReviewQuestions().length;
   const hasCompletedCoffeeShop = state.progress.completedMissions.includes("coffee_shop");
 
@@ -366,14 +397,24 @@ function renderHome() {
         <div class="meter" aria-label="TEF Practice Progress ${state.progress.readiness}%">
           <div class="meter-fill" style="--value: ${state.progress.readiness}%"></div>
         </div>
-        <div class="skill-grid">
-          ${Object.entries(skills).map(([label, value]) => `
-            <div class="skill-tile">
-              <span>${label}</span>
-              <strong>${value}</strong>
-            </div>
-          `).join("")}
+        <div class="stat-card">
+          <span class="stat-label">Total XP</span>
+          <strong>${state.progress.totalXp || 0}</strong>
+          <p class="next-step">Accumulated practice reward.</p>
         </div>
+        ${skillTiles.length ? `
+          <p class="next-step">Skill performance from your latest full mission.</p>
+          <div class="skill-grid">
+            ${skillTiles.map((tile) => `
+              <div class="skill-tile">
+                <span>${tile.label}</span>
+                <strong>${tile.value}</strong>
+              </div>
+            `).join("")}
+          </div>
+        ` : `
+          <p class="next-step">Complete a full mission to see skill performance.</p>
+        `}
         ${lastMissionAttempt ? `
           <div class="stat-card">
             <span class="stat-label">Last Mission Attempt</span>
@@ -632,6 +673,7 @@ function finishMission() {
   const totalTimeMs = getTotalAnswerTimeMs();
   const averageTimeMs = activeQuestions.length ? totalTimeMs / activeQuestions.length : 0;
   const readinessGain = Math.round((score / activeQuestions.length) * 2);
+  const skillPerformance = calculateSkillPerformance(state.answers);
 
   state.progress.totalXp += state.xp;
   state.progress.readiness = Math.max(state.progress.readiness || 0, readinessGain);
@@ -680,6 +722,7 @@ function finishMission() {
     guessedCount: guessedAnswers.length,
     totalTimeMs,
     averageTimeMs,
+    skillPerformance,
     completedAt: new Date().toISOString()
   };
 
@@ -698,12 +741,11 @@ function finishMission() {
 function renderComplete() {
   const activeQuestions = getActiveQuestions();
   const score = getScore();
-  const scorePercent = Math.round((score / activeQuestions.length) * 100);
   const wrongCount = getWrongAnswers().length;
   const guessedCount = getGuessedAnswers().length;
   const totalTimeMs = getTotalAnswerTimeMs();
   const averageTimeMs = activeQuestions.length ? totalTimeMs / activeQuestions.length : 0;
-  const situationPercent = Math.round(((state.answers.length + score) / (activeQuestions.length * 2)) * 100);
+  const skillTiles = getSkillPerformanceTiles(calculateSkillPerformance(state.answers));
   const reviewCount = getReviewQuestions().length;
   const nextStepText = reviewCount === 0
     ? "Great work — you cleared your weak spots for this mission. Next mission: Grocery Store — coming soon."
@@ -747,14 +789,12 @@ function renderComplete() {
       </div>
 
       <div class="report-grid">
-        <div class="report-tile">
-          <span>Vocabulary</span>
-          <strong>${scorePercent}%</strong>
-        </div>
-        <div class="report-tile">
-          <span>Situation</span>
-          <strong>${situationPercent}%</strong>
-        </div>
+        ${skillTiles.map((tile) => `
+          <div class="report-tile">
+            <span>${tile.label}</span>
+            <strong>${tile.value}</strong>
+          </div>
+        `).join("")}
       </div>
 
       <p class="next-step">${nextStepText}</p>
