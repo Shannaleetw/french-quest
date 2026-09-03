@@ -26,6 +26,7 @@ const defaultProgress = {
   completedMissions: [],
   wrongQuestionIds: [],
   guessedQuestionIds: [],
+  activeSession: null,
   skillXp: {
     vocabulary: 0,
     reading: 0,
@@ -72,7 +73,8 @@ function loadProgress() {
       },
       wrongQuestionIds: parsed.wrongQuestionIds || [],
       guessedQuestionIds: parsed.guessedQuestionIds || [],
-      completedMissions: parsed.completedMissions || []
+      completedMissions: parsed.completedMissions || [],
+      activeSession: parsed.activeSession || null
     };
 
     if (!progress.lastMissionAttempt && parsed.lastAttempt?.mission !== "Coffee Shop Review") {
@@ -92,6 +94,78 @@ function loadProgress() {
 
 function saveProgress() {
   localStorage.setItem(storageKey, JSON.stringify(state.progress));
+}
+
+function isValidActiveSession(session) {
+  if (!session || session.version !== 1) return false;
+  if (session.missionId !== "coffee_shop" || session.mode !== "mission") return false;
+  if (!["question", "feedback"].includes(session.screen)) return false;
+  if (!Array.isArray(session.activeQuestions) || session.activeQuestions.length === 0) return false;
+  if (!Array.isArray(session.answers)) return false;
+  if (!Number.isInteger(session.currentQuestion)) return false;
+  if (session.currentQuestion < 0 || session.currentQuestion >= session.activeQuestions.length) return false;
+
+  const knownQuestionIds = new Set(questions.map((question) => question.id));
+  const hasValidQuestions = session.activeQuestions.every((question) => (
+    question &&
+    knownQuestionIds.has(question.id) &&
+    Array.isArray(question.options) &&
+    Number.isInteger(question.correctIndexOverride)
+  ));
+  if (!hasValidQuestions) return false;
+
+  if (session.screen === "feedback" && session.answers.length !== session.currentQuestion + 1) return false;
+  if (session.screen === "question" && session.answers.length > session.currentQuestion) return false;
+
+  return true;
+}
+
+function saveActiveSession() {
+  if (state.reviewMode || !["question", "feedback"].includes(state.screen) || state.activeQuestions.length === 0) return;
+
+  const now = new Date().toISOString();
+  state.progress.activeSession = {
+    version: 1,
+    missionId: "coffee_shop",
+    mode: "mission",
+    screen: state.screen,
+    currentQuestion: state.currentQuestion,
+    selectedAnswer: state.selectedAnswer,
+    guessedCurrent: state.guessedCurrent,
+    answers: state.answers,
+    activeQuestions: state.activeQuestions,
+    xp: state.xp,
+    startedAt: state.progress.activeSession?.startedAt || now,
+    updatedAt: now
+  };
+  saveProgress();
+}
+
+function clearActiveSession() {
+  state.progress.activeSession = null;
+}
+
+function restoreActiveSession() {
+  const session = state.progress.activeSession;
+  if (!isValidActiveSession(session)) {
+    if (session) {
+      clearActiveSession();
+      saveProgress();
+    }
+    return false;
+  }
+
+  state.screen = session.screen;
+  state.currentQuestion = session.currentQuestion;
+  state.selectedAnswer = session.selectedAnswer;
+  state.guessedCurrent = Boolean(session.guessedCurrent);
+  state.answers = session.answers;
+  state.activeQuestions = session.activeQuestions;
+  state.reviewMode = false;
+  state.xp = Number(session.xp) || 0;
+  state.missionStartTime = session.startedAt ? Date.parse(session.startedAt) : Date.now();
+  state.questionStartTime = Date.now();
+  return true;
 }
 
 function uniqueIds(ids) {
@@ -115,7 +189,7 @@ async function loadMissionData() {
     questions = data;
     state.missionLoaded = true;
     state.readiness = state.progress.readiness || 0;
-    state.screen = "home";
+    state.screen = restoreActiveSession() ? state.screen : "home";
     render();
   } catch (error) {
     console.error("Mission loading failed:", error);
@@ -492,6 +566,7 @@ function startMission({ randomizeQuestions = false, randomizeOptions = false, re
   state.activeQuestions = prepareQuestionsForSession(questions, { randomizeQuestions, randomizeOptions });
   state.missionStartTime = Date.now();
   state.questionStartTime = Date.now();
+  saveActiveSession();
   render();
 }
 
@@ -556,12 +631,14 @@ function renderQuestion() {
   document.querySelectorAll(".option").forEach((button) => {
     button.addEventListener("click", () => {
       state.selectedAnswer = Number(button.dataset.option);
+      saveActiveSession();
       renderQuestion();
     });
   });
 
   document.getElementById("guessToggle").addEventListener("click", () => {
     state.guessedCurrent = !state.guessedCurrent;
+    saveActiveSession();
     renderQuestion();
   });
 
@@ -587,6 +664,7 @@ function submitAnswer() {
 
   if (isCorrect) state.xp += xpPerCorrect;
   state.screen = "feedback";
+  saveActiveSession();
   render();
 }
 
@@ -665,6 +743,7 @@ function nextQuestion() {
   state.guessedCurrent = false;
   state.questionStartTime = Date.now();
   state.screen = "question";
+  saveActiveSession();
   render();
 }
 
@@ -737,6 +816,7 @@ function finishMission() {
   } else {
     state.progress.lastMissionAttempt = attemptSummary;
     state.progress.lastAttempt = attemptSummary;
+    clearActiveSession();
   }
 
   saveProgress();
