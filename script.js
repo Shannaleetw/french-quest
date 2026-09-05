@@ -394,6 +394,7 @@ function renderHome() {
       <p class="eyebrow">Launch Version 1</p>
       <h2>Practice TEF Canada French through real Canadian life missions.</h2>
       <p class="launch-copy">為中文使用者設計的 TEF Canada 法文情境練習工具。</p>
+      <p class="launch-copy">從零開始的 TEF Canada 情境入門；更高程度內容陸續推出。</p>
       <p class="launch-copy">French Quest helps TEF Canada learners practice everyday French for real situations: ordering coffee, shopping for groceries, and visiting a bank.</p>
       <div class="launch-points">
         <span>Original TEF-style questions</span>
