@@ -854,10 +854,6 @@ function renderComplete() {
           <strong>${state.xp}</strong>
         </div>
         <div class="stat-card">
-          <span class="stat-label">TEF 練習進度</span>
-          <strong>${state.progress.readiness}%</strong>
-        </div>
-        <div class="stat-card">
           <span class="stat-label">答錯題目</span>
           <strong>${wrongCount}</strong>
         </div>
